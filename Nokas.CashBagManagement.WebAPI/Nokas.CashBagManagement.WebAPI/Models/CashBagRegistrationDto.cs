@@ -1,7 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.Contracts;
 using System.Xml.Serialization;
-using static Azure.Core.HttpHeader;
 
 namespace Nokas.CashBagManagement.WebAPI.Models
 {
@@ -9,7 +7,7 @@ namespace Nokas.CashBagManagement.WebAPI.Models
     public class CashBagRegistrationDto
     {
         [XmlElement("registrations")]
-        public Registration Registrations { get; set; } = new Registration();
+        public Registration Registrations { get; set; } = new();
 
         [XmlElement("cacheDbRegistrationId")]
         public int CacheDbRegistrationId { get; set; }

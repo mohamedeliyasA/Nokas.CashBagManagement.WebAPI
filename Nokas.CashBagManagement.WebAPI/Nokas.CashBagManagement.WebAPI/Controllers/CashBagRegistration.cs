@@ -1,12 +1,15 @@
 ﻿
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nokas.CashBagManagement.WebAPI.Models;
 
 namespace Nokas.CashBagManagement.WebAPI.Controllers
 {
+    [Authorize]
     [Route("api/cashbag/register")]
     [ApiController]
+
     public class CashBagRegistration : ControllerBase
     {
         [HttpGet( Name = "GetCashBagRegistrationData")]
