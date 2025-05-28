@@ -47,7 +47,12 @@ namespace Nokas.CashBagManagement.WebAPI
                     ForeignCurrencies = "USD, EUR",
                     ConfirmFlag = "Y",
                     RegisteredUserId = "User123",
-                    Vouchers = new Vouchers()
+                    Vouchers = new List<Vouchers>()
+                    { 
+                        new Vouchers { VoucherDetails = "1"},
+                        new Vouchers { VoucherDetails = "2"},
+
+                        }
                 },
                 CacheDbRegistrationId = 1,
                 CustomerCountry = null

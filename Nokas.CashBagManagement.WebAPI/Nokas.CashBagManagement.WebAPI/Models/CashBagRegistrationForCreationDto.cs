@@ -99,7 +99,7 @@ namespace Nokas.CashBagManagement.WebAPI.Models
         public string RegisteredUserId { get; set; } = string.Empty;
 
         [XmlElement("vouchers")]
-        public CreateVouchers Vouchers { get; set; } = new();
+        public List<CreateVouchers> Vouchers { get; set; } = new();
     }
 
     public class CreateExchangeRates

@@ -1,5 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nokas.CashBagManagement.WebAPI.Models;
@@ -12,7 +11,7 @@ namespace Nokas.CashBagManagement.WebAPI.Controllers
 
     public class CashBagRegistration : ControllerBase
     {
-        [HttpGet( Name = "GetCashBagRegistrationData")]
+        [HttpGet(Name = "GetCashBagRegistrationData")]
         public ActionResult<CashBagRegistrationDto> GetCashBag()
         {
             var cashBag = CashBagRegistrationDataStore.Current.CashBagRegistrationDto;
@@ -67,10 +66,13 @@ namespace Nokas.CashBagManagement.WebAPI.Controllers
                     ForeignCurrencies = bagRegistration.Registrations.ForeignCurrencies,
                     ConfirmFlag = bagRegistration.Registrations.ConfirmFlag,
                     RegisteredUserId = bagRegistration.Registrations.RegisteredUserId,
-                    Vouchers = new Vouchers
-                    {
-                        VoucherDetails = bagRegistration.Registrations.Vouchers.VoucherDetails
-                    }
+
+                    Vouchers = bagRegistration.Registrations.Vouchers
+                                    .Select(v => new Vouchers
+                                         {
+                                            VoucherDetails = v.VoucherDetails
+                                         })
+                                    .ToList()
                 }
             };
 
