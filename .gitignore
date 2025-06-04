@@ -4,6 +4,9 @@ obj/
 out/
 .config/
 
+# Logs
+logs/
+
 # User-specific files
 *.user
 *.suo
