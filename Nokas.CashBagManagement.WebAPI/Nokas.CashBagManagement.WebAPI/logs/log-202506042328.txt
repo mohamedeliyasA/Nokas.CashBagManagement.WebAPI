@@ -1,0 +1,105 @@
+2025-06-04 23:28:22.775 +02:00 [DBG] Registered model binder providers, in the following order: ["Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BinderTypeModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ServicesModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BodyModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.HeaderModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.FloatingPointTypeModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.EnumTypeModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.DateTimeModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.SimpleTypeModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.TryParseModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CancellationTokenModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ByteArrayModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.FormFileModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.FormCollectionModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.KeyValuePairModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.DictionaryModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ArrayModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CollectionModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ComplexObjectModelBinderProvider"]
+2025-06-04 23:28:22.965 +02:00 [DBG] Hosting starting
+2025-06-04 23:28:23.005 +02:00 [INF] User profile is available. Using 'C:\Users\moham\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-06-04 23:28:23.033 +02:00 [DBG] Reading data from file 'C:\Users\moham\AppData\Local\ASP.NET\DataProtection-Keys\key-437037be-7eb3-4d06-b387-ec2d3fcc9dd5.xml'.
+2025-06-04 23:28:23.046 +02:00 [DBG] Reading data from file 'C:\Users\moham\AppData\Local\ASP.NET\DataProtection-Keys\key-5c0ddf59-7d60-4928-b59b-b340427deba1.xml'.
+2025-06-04 23:28:23.049 +02:00 [DBG] Reading data from file 'C:\Users\moham\AppData\Local\ASP.NET\DataProtection-Keys\key-dd14b0ec-b30d-4302-a94d-01c7f0009530.xml'.
+2025-06-04 23:28:23.054 +02:00 [DBG] Found key {437037be-7eb3-4d06-b387-ec2d3fcc9dd5}.
+2025-06-04 23:28:23.061 +02:00 [DBG] Found key {5c0ddf59-7d60-4928-b59b-b340427deba1}.
+2025-06-04 23:28:23.064 +02:00 [DBG] Found key {dd14b0ec-b30d-4302-a94d-01c7f0009530}.
+2025-06-04 23:28:23.075 +02:00 [DBG] Considering key {dd14b0ec-b30d-4302-a94d-01c7f0009530} with expiration date 2025-08-13 17:05:33Z as default key.
+2025-06-04 23:28:23.088 +02:00 [DBG] Forwarded activator type request from Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiXmlDecryptor, Microsoft.AspNetCore.DataProtection, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60 to Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiXmlDecryptor, Microsoft.AspNetCore.DataProtection, Culture=neutral, PublicKeyToken=adb9793829ddae60
+2025-06-04 23:28:23.098 +02:00 [DBG] Decrypting secret element using Windows DPAPI.
+2025-06-04 23:28:23.102 +02:00 [DBG] Forwarded activator type request from Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorDescriptorDeserializer, Microsoft.AspNetCore.DataProtection, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60 to Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorDescriptorDeserializer, Microsoft.AspNetCore.DataProtection, Culture=neutral, PublicKeyToken=adb9793829ddae60
+2025-06-04 23:28:23.110 +02:00 [DBG] Opening CNG algorithm 'AES' from provider 'null' with chaining mode CBC.
+2025-06-04 23:28:23.112 +02:00 [DBG] Opening CNG algorithm 'SHA256' from provider 'null' with HMAC.
+2025-06-04 23:28:23.115 +02:00 [DBG] Using key {dd14b0ec-b30d-4302-a94d-01c7f0009530} as the default key.
+2025-06-04 23:28:23.117 +02:00 [DBG] Key ring with default key {dd14b0ec-b30d-4302-a94d-01c7f0009530} was loaded during application startup.
+2025-06-04 23:28:23.126 +02:00 [DBG] Middleware loaded
+2025-06-04 23:28:23.128 +02:00 [DBG] Middleware loaded. Script /_framework/aspnetcore-browser-refresh.js (16545 B).
+2025-06-04 23:28:23.131 +02:00 [DBG] Middleware loaded. Script /_framework/blazor-hotreload.js (799 B).
+2025-06-04 23:28:23.246 +02:00 [DBG] Middleware loaded: DOTNET_MODIFIABLE_ASSEMBLIES=debug, __ASPNETCORE_BROWSER_TOOLS=true
+2025-06-04 23:28:23.350 +02:00 [INF] Now listening on: https://localhost:7021
+2025-06-04 23:28:23.351 +02:00 [INF] Now listening on: http://localhost:5137
+2025-06-04 23:28:23.354 +02:00 [DBG] Loaded hosting startup assembly Nokas.CashBagManagement.WebAPI
+2025-06-04 23:28:23.355 +02:00 [DBG] Loaded hosting startup assembly Microsoft.WebTools.ApiEndpointDiscovery
+2025-06-04 23:28:23.356 +02:00 [DBG] Loaded hosting startup assembly Microsoft.AspNetCore.Watch.BrowserRefresh
+2025-06-04 23:28:23.357 +02:00 [DBG] Loaded hosting startup assembly Microsoft.WebTools.BrowserLink.Net
+2025-06-04 23:28:23.789 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-06-04 23:28:23.791 +02:00 [INF] Hosting environment: Development
+2025-06-04 23:28:23.792 +02:00 [INF] Content root path: C:\Users\moham\OneDrive - Avarn Security\LocalGit\Nokas.CashBagManagement.WebAPI\Nokas.CashBagManagement.WebAPI\Nokas.CashBagManagement.WebAPI
+2025-06-04 23:28:23.793 +02:00 [DBG] Hosting started
+2025-06-04 23:28:31.368 +02:00 [DBG] Connection id "0HND3LR0FIHNJ" received FIN.
+2025-06-04 23:28:31.378 +02:00 [DBG] Connection id "0HND3LR0FIHNJ" accepted.
+2025-06-04 23:28:31.381 +02:00 [DBG] Connection id "0HND3LR0FIHNJ" started.
+2025-06-04 23:28:31.383 +02:00 [DBG] Connection id "0HND3LR0FIHNK" accepted.
+2025-06-04 23:28:31.385 +02:00 [DBG] Connection id "0HND3LR0FIHNK" started.
+2025-06-04 23:28:31.496 +02:00 [DBG] Failed to authenticate HTTPS connection.
+System.IO.IOException: Received an unexpected EOF or 0 bytes from the transport stream.
+   at System.Net.Security.SslStream.ReceiveHandshakeFrameAsync[TIOAdapter](CancellationToken cancellationToken)
+   at System.Net.Security.SslStream.ForceAuthenticationAsync[TIOAdapter](Boolean receiveFirst, Byte[] reAuthenticationData, CancellationToken cancellationToken)
+   at System.Net.Security.SslStream.ProcessAuthenticationWithTelemetryAsync(Boolean isAsync, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Https.Internal.HttpsConnectionMiddleware.OnConnectionAsync(ConnectionContext context)
+2025-06-04 23:28:31.561 +02:00 [DBG] Connection id "0HND3LR0FIHNJ" stopped.
+2025-06-04 23:28:31.563 +02:00 [DBG] Connection 0HND3LR0FIHNK established using the following protocol: "Tls13"
+2025-06-04 23:28:31.564 +02:00 [DBG] Connection id "0HND3LR0FIHNJ" sending FIN because: "The Socket transport's send loop completed gracefully."
+2025-06-04 23:28:31.624 +02:00 [INF] Request starting HTTP/1.1 POST https://localhost:7021/api/cashbag/register - application/xml 2095
+2025-06-04 23:28:31.650 +02:00 [DBG] Wildcard detected, all requests with hosts will be allowed.
+2025-06-04 23:28:31.651 +02:00 [VRB] All hosts are allowed.
+2025-06-04 23:28:31.672 +02:00 [DBG] 1 candidate(s) found for the request path '/api/cashbag/register'
+2025-06-04 23:28:31.678 +02:00 [DBG] Endpoint 'Nokas.CashBagManagement.WebAPI.Controllers.CashBagRegistrationController.CreateBagRegistration (Nokas.CashBagManagement.WebAPI)' with route pattern 'api/cashbag/register' is valid for the request path '/api/cashbag/register'
+2025-06-04 23:28:31.680 +02:00 [DBG] Request matched endpoint 'Nokas.CashBagManagement.WebAPI.Controllers.CashBagRegistrationController.CreateBagRegistration (Nokas.CashBagManagement.WebAPI)'
+2025-06-04 23:28:31.682 +02:00 [VRB] The endpoint does not specify the IRequestSizeLimitMetadata.
+2025-06-04 23:28:31.692 +02:00 [DBG] Static files was skipped as the request already matched an endpoint.
+2025-06-04 23:28:32.125 +02:00 [DBG] Successfully validated the token.
+2025-06-04 23:28:32.129 +02:00 [DBG] AuthenticationScheme: Bearer was successfully authenticated.
+2025-06-04 23:28:32.140 +02:00 [DBG] Authorization was successful.
+2025-06-04 23:28:32.143 +02:00 [INF] Executing endpoint 'Nokas.CashBagManagement.WebAPI.Controllers.CashBagRegistrationController.CreateBagRegistration (Nokas.CashBagManagement.WebAPI)'
+2025-06-04 23:28:32.168 +02:00 [INF] Route matched with {action = "CreateBagRegistration", controller = "CashBagRegistration"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult`1[Nokas.CashBagManagement.WebAPI.Models.CashBagRegistrationDto] CreateBagRegistration(Nokas.CashBagManagement.WebAPI.Models.CashBagRegistrationForCreationDto) on controller Nokas.CashBagManagement.WebAPI.Controllers.CashBagRegistrationController (Nokas.CashBagManagement.WebAPI).
+2025-06-04 23:28:32.173 +02:00 [DBG] Execution plan of authorization filters (in the following order): ["None"]
+2025-06-04 23:28:32.174 +02:00 [DBG] Execution plan of resource filters (in the following order): ["None"]
+2025-06-04 23:28:32.176 +02:00 [DBG] Execution plan of action filters (in the following order): ["Microsoft.AspNetCore.Mvc.ModelBinding.UnsupportedContentTypeFilter (Order: -3000)","Microsoft.AspNetCore.Mvc.Infrastructure.ModelStateInvalidFilter (Order: -2000)"]
+2025-06-04 23:28:32.177 +02:00 [DBG] Execution plan of exception filters (in the following order): ["None"]
+2025-06-04 23:28:32.179 +02:00 [DBG] Execution plan of result filters (in the following order): ["Microsoft.AspNetCore.Mvc.Infrastructure.ClientErrorResultFilter (Order: -2000)"]
+2025-06-04 23:28:32.181 +02:00 [DBG] Executing controller factory for controller Nokas.CashBagManagement.WebAPI.Controllers.CashBagRegistrationController (Nokas.CashBagManagement.WebAPI)
+2025-06-04 23:28:32.184 +02:00 [DBG] Executed controller factory for controller Nokas.CashBagManagement.WebAPI.Controllers.CashBagRegistrationController (Nokas.CashBagManagement.WebAPI)
+2025-06-04 23:28:32.272 +02:00 [DBG] Attempting to bind parameter 'bagRegistration' of type 'Nokas.CashBagManagement.WebAPI.Models.CashBagRegistrationForCreationDto' ...
+2025-06-04 23:28:32.279 +02:00 [DBG] Attempting to bind parameter 'bagRegistration' of type 'Nokas.CashBagManagement.WebAPI.Models.CashBagRegistrationForCreationDto' using the name '' in request data ...
+2025-06-04 23:28:32.285 +02:00 [DBG] Rejected input formatter 'Microsoft.AspNetCore.Mvc.Formatters.NewtonsoftJsonPatchInputFormatter' for content type 'application/xml'.
+2025-06-04 23:28:32.289 +02:00 [DBG] Rejected input formatter 'Microsoft.AspNetCore.Mvc.Formatters.NewtonsoftJsonInputFormatter' for content type 'application/xml'.
+2025-06-04 23:28:32.293 +02:00 [DBG] Selected input formatter 'Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerInputFormatter' for content type 'application/xml'.
+2025-06-04 23:28:32.299 +02:00 [DBG] Connection id "0HND3LR0FIHNK", Request id "0HND3LR0FIHNK:00000001": started reading request body.
+2025-06-04 23:28:32.301 +02:00 [DBG] Connection id "0HND3LR0FIHNK", Request id "0HND3LR0FIHNK:00000001": done reading request body.
+2025-06-04 23:28:32.341 +02:00 [DBG] Done attempting to bind parameter 'bagRegistration' of type 'Nokas.CashBagManagement.WebAPI.Models.CashBagRegistrationForCreationDto'.
+2025-06-04 23:28:32.343 +02:00 [DBG] Done attempting to bind parameter 'bagRegistration' of type 'Nokas.CashBagManagement.WebAPI.Models.CashBagRegistrationForCreationDto'.
+2025-06-04 23:28:32.345 +02:00 [DBG] Attempting to validate the bound parameter 'bagRegistration' of type 'Nokas.CashBagManagement.WebAPI.Models.CashBagRegistrationForCreationDto' ...
+2025-06-04 23:28:32.369 +02:00 [DBG] Done attempting to validate the bound parameter 'bagRegistration' of type 'Nokas.CashBagManagement.WebAPI.Models.CashBagRegistrationForCreationDto'.
+2025-06-04 23:28:32.374 +02:00 [VRB] Action Filter: Before executing OnActionExecuting on filter Microsoft.AspNetCore.Mvc.ModelBinding.UnsupportedContentTypeFilter.
+2025-06-04 23:28:32.375 +02:00 [VRB] Action Filter: After executing OnActionExecuting on filter Microsoft.AspNetCore.Mvc.ModelBinding.UnsupportedContentTypeFilter.
+2025-06-04 23:28:32.377 +02:00 [VRB] Action Filter: Before executing OnActionExecuting on filter Microsoft.AspNetCore.Mvc.Infrastructure.ModelStateInvalidFilter.
+2025-06-04 23:28:32.378 +02:00 [VRB] Action Filter: After executing OnActionExecuting on filter Microsoft.AspNetCore.Mvc.Infrastructure.ModelStateInvalidFilter.
+2025-06-04 23:28:32.384 +02:00 [INF] Executing action method Nokas.CashBagManagement.WebAPI.Controllers.CashBagRegistrationController.CreateBagRegistration (Nokas.CashBagManagement.WebAPI) - Validation state: "Valid"
+2025-06-04 23:28:32.386 +02:00 [VRB] Executing action method Nokas.CashBagManagement.WebAPI.Controllers.CashBagRegistrationController.CreateBagRegistration (Nokas.CashBagManagement.WebAPI) with arguments (["Nokas.CashBagManagement.WebAPI.Models.CashBagRegistrationForCreationDto"])
+2025-06-04 23:28:32.393 +02:00 [INF] CorrelationId: 17c0b1af-c3f7-4367-98d1-3125217fee77 - Successfully created bag registration.
+2025-06-04 23:28:32.399 +02:00 [INF] Executed action method Nokas.CashBagManagement.WebAPI.Controllers.CashBagRegistrationController.CreateBagRegistration (Nokas.CashBagManagement.WebAPI), returned result Microsoft.AspNetCore.Mvc.CreatedAtRouteResult in 7.5558ms.
+2025-06-04 23:28:32.405 +02:00 [VRB] Action Filter: Before executing OnActionExecuted on filter Microsoft.AspNetCore.Mvc.Infrastructure.ModelStateInvalidFilter.
+2025-06-04 23:28:32.408 +02:00 [VRB] Action Filter: After executing OnActionExecuted on filter Microsoft.AspNetCore.Mvc.Infrastructure.ModelStateInvalidFilter.
+2025-06-04 23:28:32.409 +02:00 [VRB] Action Filter: Before executing OnActionExecuted on filter Microsoft.AspNetCore.Mvc.ModelBinding.UnsupportedContentTypeFilter.
+2025-06-04 23:28:32.411 +02:00 [VRB] Action Filter: After executing OnActionExecuted on filter Microsoft.AspNetCore.Mvc.ModelBinding.UnsupportedContentTypeFilter.
+2025-06-04 23:28:32.413 +02:00 [VRB] Result Filter: Before executing OnResultExecuting on filter Microsoft.AspNetCore.Mvc.Infrastructure.ClientErrorResultFilter.
+2025-06-04 23:28:32.417 +02:00 [VRB] Result Filter: After executing OnResultExecuting on filter Microsoft.AspNetCore.Mvc.Infrastructure.ClientErrorResultFilter.
+2025-06-04 23:28:32.422 +02:00 [VRB] Before executing action result Microsoft.AspNetCore.Mvc.CreatedAtRouteResult.
+2025-06-04 23:28:32.426 +02:00 [DBG] List of registered output formatters, in the following order: ["Microsoft.AspNetCore.Mvc.Formatters.HttpNoContentOutputFormatter","Microsoft.AspNetCore.Mvc.Formatters.StringOutputFormatter","Microsoft.AspNetCore.Mvc.Formatters.StreamOutputFormatter","Microsoft.AspNetCore.Mvc.Formatters.NewtonsoftJsonOutputFormatter","Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerOutputFormatter"]
+2025-06-04 23:28:32.430 +02:00 [DBG] Attempting to select an output formatter based on Accept header '["application/xml"]'.
+2025-06-04 23:28:32.432 +02:00 [DBG] Selected output formatter 'Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerOutputFormatter' and content type 'application/xml' to write the response.
+2025-06-04 23:28:32.437 +02:00 [INF] Executing CreatedAtRouteResult, writing value of type 'Nokas.CashBagManagement.WebAPI.Models.CashBagRegistrationDto'.
+2025-06-04 23:28:32.455 +02:00 [DBG] Found the endpoints ["Nokas.CashBagManagement.WebAPI.Controllers.CashBagRegistrationController.GetCashBag (Nokas.CashBagManagement.WebAPI)"] for address GetCashBagRegistrationData()
+2025-06-04 23:28:32.461 +02:00 [DBG] Successfully processed template api/cashbag/register for Nokas.CashBagManagement.WebAPI.Controllers.CashBagRegistrationController.GetCashBag (Nokas.CashBagManagement.WebAPI) resulting in /api/cashbag/register and 
+2025-06-04 23:28:32.464 +02:00 [DBG] Link generation succeeded for endpoints ["Nokas.CashBagManagement.WebAPI.Controllers.CashBagRegistrationController.GetCashBag (Nokas.CashBagManagement.WebAPI)"] with result /api/cashbag/register
+2025-06-04 23:28:32.482 +02:00 [VRB] After executing action result Microsoft.AspNetCore.Mvc.CreatedAtRouteResult.
+2025-06-04 23:28:32.487 +02:00 [VRB] Result Filter: Before executing OnResultExecuted on filter Microsoft.AspNetCore.Mvc.Infrastructure.ClientErrorResultFilter.
+2025-06-04 23:28:32.492 +02:00 [VRB] Result Filter: After executing OnResultExecuted on filter Microsoft.AspNetCore.Mvc.Infrastructure.ClientErrorResultFilter.
+2025-06-04 23:28:32.499 +02:00 [INF] Executed action Nokas.CashBagManagement.WebAPI.Controllers.CashBagRegistrationController.CreateBagRegistration (Nokas.CashBagManagement.WebAPI) in 315.3947ms
+2025-06-04 23:28:32.502 +02:00 [INF] Executed endpoint 'Nokas.CashBagManagement.WebAPI.Controllers.CashBagRegistrationController.CreateBagRegistration (Nokas.CashBagManagement.WebAPI)'
+2025-06-04 23:28:32.514 +02:00 [DBG] Connection id "0HND3LR0FIHNK" completed keep alive response.
+2025-06-04 23:28:32.519 +02:00 [INF] Request finished HTTP/1.1 POST https://localhost:7021/api/cashbag/register - 201 1652 application/xml; charset=utf-8 909.2488ms

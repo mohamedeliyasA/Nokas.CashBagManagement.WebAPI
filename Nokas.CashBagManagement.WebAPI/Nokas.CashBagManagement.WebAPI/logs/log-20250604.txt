@@ -1,0 +1,48 @@
+2025-06-04 23:22:31.079 +02:00 [INF] User profile is available. Using 'C:\Users\moham\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-06-04 23:22:31.341 +02:00 [INF] Now listening on: https://localhost:7021
+2025-06-04 23:22:31.344 +02:00 [INF] Now listening on: http://localhost:5137
+2025-06-04 23:22:32.098 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-06-04 23:22:32.566 +02:00 [INF] Hosting environment: Development
+2025-06-04 23:22:32.567 +02:00 [INF] Content root path: C:\Users\moham\OneDrive - Avarn Security\LocalGit\Nokas.CashBagManagement.WebAPI\Nokas.CashBagManagement.WebAPI\Nokas.CashBagManagement.WebAPI
+2025-06-04 23:22:32.863 +02:00 [INF] Request starting HTTP/2 GET https://localhost:7021/_framework/aspnetcore-browser-refresh.js - null null
+2025-06-04 23:22:32.863 +02:00 [INF] Request starting HTTP/2 GET https://localhost:7021/_vs/browserLink - null null
+2025-06-04 23:22:32.906 +02:00 [INF] Request finished HTTP/2 GET https://localhost:7021/_framework/aspnetcore-browser-refresh.js - 200 16545 application/javascript; charset=utf-8 51.9771ms
+2025-06-04 23:22:32.957 +02:00 [INF] Request finished HTTP/2 GET https://localhost:7021/_vs/browserLink - 200 null text/javascript; charset=UTF-8 106.3426ms
+2025-06-04 23:22:33.156 +02:00 [INF] Request starting HTTP/2 GET https://localhost:7021/swagger/v1/swagger.json - null null
+2025-06-04 23:22:33.218 +02:00 [INF] Request finished HTTP/2 GET https://localhost:7021/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 62.0979ms
+2025-06-04 23:22:36.770 +02:00 [INF] Request starting HTTP/1.1 POST https://localhost:7021/api/cashbag/register - application/xml 2095
+2025-06-04 23:22:37.337 +02:00 [INF] Executing endpoint 'Nokas.CashBagManagement.WebAPI.Controllers.CashBagRegistrationController.CreateBagRegistration (Nokas.CashBagManagement.WebAPI)'
+2025-06-04 23:22:37.388 +02:00 [INF] Route matched with {action = "CreateBagRegistration", controller = "CashBagRegistration"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult`1[Nokas.CashBagManagement.WebAPI.Models.CashBagRegistrationDto] CreateBagRegistration(Nokas.CashBagManagement.WebAPI.Models.CashBagRegistrationForCreationDto) on controller Nokas.CashBagManagement.WebAPI.Controllers.CashBagRegistrationController (Nokas.CashBagManagement.WebAPI).
+2025-06-04 23:22:37.643 +02:00 [INF] CorrelationId: a65baf9e-9baf-4b47-9253-e9858af61a78 - Successfully created bag registration.
+2025-06-04 23:22:37.651 +02:00 [INF] Executing CreatedAtRouteResult, writing value of type 'Nokas.CashBagManagement.WebAPI.Models.CashBagRegistrationDto'.
+2025-06-04 23:22:37.692 +02:00 [INF] Executed action Nokas.CashBagManagement.WebAPI.Controllers.CashBagRegistrationController.CreateBagRegistration (Nokas.CashBagManagement.WebAPI) in 180.4565ms
+2025-06-04 23:22:37.695 +02:00 [INF] Executed endpoint 'Nokas.CashBagManagement.WebAPI.Controllers.CashBagRegistrationController.CreateBagRegistration (Nokas.CashBagManagement.WebAPI)'
+2025-06-04 23:22:37.698 +02:00 [INF] Request finished HTTP/1.1 POST https://localhost:7021/api/cashbag/register - 201 1652 application/xml; charset=utf-8 927.2764ms
+2025-06-04 23:23:27.942 +02:00 [INF] User profile is available. Using 'C:\Users\moham\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-06-04 23:23:28.218 +02:00 [INF] Now listening on: https://localhost:7021
+2025-06-04 23:23:28.220 +02:00 [INF] Now listening on: http://localhost:5137
+2025-06-04 23:23:28.620 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-06-04 23:23:28.622 +02:00 [INF] Hosting environment: Development
+2025-06-04 23:23:28.623 +02:00 [INF] Content root path: C:\Users\moham\OneDrive - Avarn Security\LocalGit\Nokas.CashBagManagement.WebAPI\Nokas.CashBagManagement.WebAPI\Nokas.CashBagManagement.WebAPI
+2025-06-04 23:23:37.014 +02:00 [INF] Request starting HTTP/1.1 POST https://localhost:7021/api/cashbag/register - application/xml 2095
+2025-06-04 23:23:37.675 +02:00 [INF] Executing endpoint 'Nokas.CashBagManagement.WebAPI.Controllers.CashBagRegistrationController.CreateBagRegistration (Nokas.CashBagManagement.WebAPI)'
+2025-06-04 23:23:37.699 +02:00 [INF] Route matched with {action = "CreateBagRegistration", controller = "CashBagRegistration"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult`1[Nokas.CashBagManagement.WebAPI.Models.CashBagRegistrationDto] CreateBagRegistration(Nokas.CashBagManagement.WebAPI.Models.CashBagRegistrationForCreationDto) on controller Nokas.CashBagManagement.WebAPI.Controllers.CashBagRegistrationController (Nokas.CashBagManagement.WebAPI).
+2025-06-04 23:23:37.780 +02:00 [INF] CorrelationId: e54747fa-12ba-4db0-9441-f157b5441029 - Successfully created bag registration.
+2025-06-04 23:23:37.790 +02:00 [INF] Executing CreatedAtRouteResult, writing value of type 'Nokas.CashBagManagement.WebAPI.Models.CashBagRegistrationDto'.
+2025-06-04 23:23:37.823 +02:00 [INF] Executed action Nokas.CashBagManagement.WebAPI.Controllers.CashBagRegistrationController.CreateBagRegistration (Nokas.CashBagManagement.WebAPI) in 116.7113ms
+2025-06-04 23:23:37.826 +02:00 [INF] Executed endpoint 'Nokas.CashBagManagement.WebAPI.Controllers.CashBagRegistrationController.CreateBagRegistration (Nokas.CashBagManagement.WebAPI)'
+2025-06-04 23:23:37.832 +02:00 [INF] Request finished HTTP/1.1 POST https://localhost:7021/api/cashbag/register - 201 1652 application/xml; charset=utf-8 829.2172ms
+2025-06-04 23:24:02.606 +02:00 [INF] User profile is available. Using 'C:\Users\moham\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-06-04 23:24:02.913 +02:00 [INF] Now listening on: https://localhost:7021
+2025-06-04 23:24:02.915 +02:00 [INF] Now listening on: http://localhost:5137
+2025-06-04 23:24:03.219 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-06-04 23:24:03.222 +02:00 [INF] Hosting environment: Development
+2025-06-04 23:24:03.224 +02:00 [INF] Content root path: C:\Users\moham\OneDrive - Avarn Security\LocalGit\Nokas.CashBagManagement.WebAPI\Nokas.CashBagManagement.WebAPI\Nokas.CashBagManagement.WebAPI
+2025-06-04 23:24:09.926 +02:00 [INF] Request starting HTTP/1.1 POST https://localhost:7021/api/cashbag/register - application/xml 2095
+2025-06-04 23:24:10.427 +02:00 [INF] Executing endpoint 'Nokas.CashBagManagement.WebAPI.Controllers.CashBagRegistrationController.CreateBagRegistration (Nokas.CashBagManagement.WebAPI)'
+2025-06-04 23:24:10.452 +02:00 [INF] Route matched with {action = "CreateBagRegistration", controller = "CashBagRegistration"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult`1[Nokas.CashBagManagement.WebAPI.Models.CashBagRegistrationDto] CreateBagRegistration(Nokas.CashBagManagement.WebAPI.Models.CashBagRegistrationForCreationDto) on controller Nokas.CashBagManagement.WebAPI.Controllers.CashBagRegistrationController (Nokas.CashBagManagement.WebAPI).
+2025-06-04 23:24:10.533 +02:00 [INF] CorrelationId: 105f8af7-d944-4971-8317-e6c16223f3d9 - Successfully created bag registration.
+2025-06-04 23:24:10.543 +02:00 [INF] Executing CreatedAtRouteResult, writing value of type 'Nokas.CashBagManagement.WebAPI.Models.CashBagRegistrationDto'.
+2025-06-04 23:24:10.575 +02:00 [INF] Executed action Nokas.CashBagManagement.WebAPI.Controllers.CashBagRegistrationController.CreateBagRegistration (Nokas.CashBagManagement.WebAPI) in 115.9127ms
+2025-06-04 23:24:10.578 +02:00 [INF] Executed endpoint 'Nokas.CashBagManagement.WebAPI.Controllers.CashBagRegistrationController.CreateBagRegistration (Nokas.CashBagManagement.WebAPI)'
+2025-06-04 23:24:10.583 +02:00 [INF] Request finished HTTP/1.1 POST https://localhost:7021/api/cashbag/register - 201 1652 application/xml; charset=utf-8 665.6868ms
