@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Nokas.CashBagManagement.WebAPI;
+using Nokas.CashBagManagement.WebAPI.DBContext;
 using Nokas.CashBagManagement.WebAPI.Middleware;
 using Serilog;
 
@@ -17,6 +20,7 @@ builder.Host.UseSerilog();
 // Configure Azure AD settings
 var azureAD = builder.Configuration.GetSection("AzureAd");
 
+#region authentication
 // Configure authentication with JWT Bearer
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -46,6 +50,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+#endregion
+
+#region json and xml support
 // Add controllers with JSON and XML support
 builder.Services.AddControllers(options =>
 {
@@ -53,13 +60,26 @@ builder.Services.AddControllers(options =>
 })
 .AddNewtonsoftJson()
 .AddXmlSerializerFormatters();
+#endregion
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+#region dependency injection    
+builder.Services.AddSingleton<BagRegistrationDataStore>();
+builder.Services.AddDbContext<CashBagRegistrationContext>(dbContextOptions =>
+                                dbContextOptions
+                                .UseSqlServer(
+        builder.Configuration["ConnectionStrings:CityInfoDBConnectionString"]));
+#endregion
 
 var app = builder.Build();
+
+#region Middlewares
 app.UseMiddleware<ExceptionLoggingMiddleware>();
 app.UseMiddleware<CorrelationIdMiddleware>();
+#endregion
 
 if (app.Environment.IsDevelopment())
 {

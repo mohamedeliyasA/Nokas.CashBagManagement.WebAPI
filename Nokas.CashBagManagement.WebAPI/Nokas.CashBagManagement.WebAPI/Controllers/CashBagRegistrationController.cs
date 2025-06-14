@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -12,10 +13,14 @@ namespace Nokas.CashBagManagement.WebAPI.Controllers
     public class CashBagRegistrationController : ControllerBase
     {
         private readonly ILogger<CashBagRegistrationController> _logger;
+        private readonly BagRegistrationDataStore _cashBagRegistrationDataStore;
+        private readonly IMapper _mapper;
 
-        public CashBagRegistrationController(ILogger<CashBagRegistrationController> logger)
+        public CashBagRegistrationController(ILogger<CashBagRegistrationController> logger, BagRegistrationDataStore cashBagRegistrationDataStore, IMapper mapper)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _cashBagRegistrationDataStore = cashBagRegistrationDataStore ?? throw new ArgumentNullException(nameof(cashBagRegistrationDataStore));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         // Helper method to get the correlation ID
@@ -23,14 +28,14 @@ namespace Nokas.CashBagManagement.WebAPI.Controllers
             HttpContext?.Items["CorrelationId"]?.ToString() ?? "N/A"; // Fallback to "N/A" if no correlation ID is set
 
         [HttpGet(Name = "GetCashBagRegistrationData")]
-        public ActionResult<CashBagRegistrationDto> GetCashBag()
+        public ActionResult<BagRegistrationRequest> GetCashBag()
         {
             
 
             var correlationId = GetCorrelationId();
             try
             {
-                var cashBag = CashBagRegistrationDataStore.Current.CashBagRegistrationDto;
+                var cashBag = _cashBagRegistrationDataStore.BagRegistrationRequest;
                 if (cashBag == null)
                 {
                     _logger.LogWarning("CorrelationId: {CorrelationId} - Cash bag registration data not found.", correlationId);
@@ -46,75 +51,39 @@ namespace Nokas.CashBagManagement.WebAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult<CashBagRegistrationDto> CreateBagRegistration(CashBagRegistrationForCreationDto bagRegistration)
+        public ActionResult<BagRegistrationRequest> CreateBagRegistration(BagRegistrationRequestForCreation bagRequest)
         {
             var correlationId = GetCorrelationId();
-            if (bagRegistration == null || !ModelState.IsValid)
+
+            if (bagRequest == null || !ModelState.IsValid)
             {
-                // Log the BadRequest (400)
                 _logger.LogError("CorrelationId: {CorrelationId} - Invalid model or bad request for {RequestPath}.", correlationId, Request.Path);
                 return BadRequest("Invalid request data");
             }
+
+            if (bagRequest.BagRegistration == null)
+            {
+                _logger.LogWarning("CorrelationId: {CorrelationId} - BagRegistration is null.", correlationId);
+                return BadRequest("BagRegistration must be provided.");
+            }
+
             try
             {
-                var cashBagRegistrationDto = new CashBagRegistrationDto
+                var mappedBagRegistration = _mapper.Map<BagRegistration>(bagRequest.BagRegistration);
+
+                var newBagRegistrationRequest = new BagRegistrationRequest
                 {
-                    CacheDbRegistrationId = bagRegistration.CacheDbRegistrationId,
-                    CustomerCountry = bagRegistration.CustomerCountry,
-                    Registrations = new Registration
-                    {
-                        ActionFlag = bagRegistration.Registrations.ActionFlag,
-                        CustomerNumber = bagRegistration.Registrations.CustomerNumber,
-                        CustomerAddress = bagRegistration.Registrations.CustomerAddress,
-                        BagNumber = bagRegistration.Registrations.BagNumber,
-                        TurnoverDate = bagRegistration.Registrations.TurnoverDate,
-                        ReferenceStatement = bagRegistration.Registrations.ReferenceStatement,
-                        ExchangeRates = new ExchangeRates
-                        {
-                            ExchangeRate = bagRegistration.Registrations.ExchangeRates.ExchangeRate
-                        },
-                        RegistrationDate = bagRegistration.Registrations.RegistrationDate,
-                        RegisteredBy = bagRegistration.Registrations.RegisteredBy,
-                        RegisteredCoins = bagRegistration.Registrations.RegisteredCoins,
-                        RegisteredCash = bagRegistration.Registrations.RegisteredCash,
-                        RegisteredChecks = bagRegistration.Registrations.RegisteredChecks,
-                        RegisteredForeignCurrency = bagRegistration.Registrations.RegisteredForeignCurrency,
-                        TotalAmount = bagRegistration.Registrations.TotalAmount,
-                        LocationId = bagRegistration.Registrations.LocationId,
-                        ShopNumber = bagRegistration.Registrations.ShopNumber,
-                        EasySafeAccount = bagRegistration.Registrations.EasySafeAccount,
-                        RegistrationApproval = bagRegistration.Registrations.RegistrationApproval,
-                        Notes = new Notes
-                        {
-                            Seddel1000 = bagRegistration.Registrations.Notes.Seddel1000,
-                            Seddel500 = bagRegistration.Registrations.Notes.Seddel500,
-                            Seddel200 = bagRegistration.Registrations.Notes.Seddel200,
-                            Seddel100 = bagRegistration.Registrations.Notes.Seddel100,
-                            Seddel50 = bagRegistration.Registrations.Notes.Seddel50
-                        },
-                        Contracts = new Contracts
-                        {
-                            ContainsValuta = bagRegistration.Registrations.Contracts.ContainsValuta
-                        },
-                        NightSafeId = bagRegistration.Registrations.NightSafeId,
-                        RegistrationSubType = bagRegistration.Registrations.RegistrationSubType,
-                        ForeignCurrencies = bagRegistration.Registrations.ForeignCurrencies,
-                        ConfirmFlag = bagRegistration.Registrations.ConfirmFlag,
-                        RegisteredUserId = bagRegistration.Registrations.RegisteredUserId,
-                        Vouchers = bagRegistration.Registrations.Vouchers
-                                    .Select(v => new Vouchers
-                                    {
-                                        VoucherDetails = v.VoucherDetails
-                                    })
-                                    .ToList()
-                    }
+                    BagRegistration = mappedBagRegistration,
+                    CacheDbRegistrationId = bagRequest.CacheDbRegistrationId,
+                    RegistrationType = bagRequest.RegistrationType,
+                    CustomerCountry = bagRequest.CustomerCountry
                 };
 
-                // Assign to the static data store so GET will return the new data
-                CashBagRegistrationDataStore.Current.CashBagRegistrationDto = cashBagRegistrationDto;
+                // Optionally, store the new registration in the data store
+                _cashBagRegistrationDataStore.BagRegistrationRequest = newBagRegistrationRequest;
 
                 _logger.LogInformation("CorrelationId: {CorrelationId} - Successfully created bag registration.", correlationId);
-                return CreatedAtRoute("GetCashBagRegistrationData", cashBagRegistrationDto);
+                return CreatedAtRoute("GetCashBagRegistrationData", newBagRegistrationRequest);
             }
             catch (Exception ex)
             {

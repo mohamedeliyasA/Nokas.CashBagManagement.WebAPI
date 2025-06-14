@@ -1,25 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Xml.Serialization;
-namespace Nokas.CashBagManagement.WebAPI.Models
+
+namespace Nokas.CashBagManagement.WebAPI.Entities
 {
-    [XmlRoot("CashBagRegistrationForCreationDto")]
-    public class CashBagRegistrationForCreationDto
+    public class CashBagRegistration
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
         [Required]
         [XmlElement("registrations")]
-        public CreateRegistration Registrations { get; set; } = new();
-        [Required]
+        public Registration Registrations { get; set; } = new();
         [XmlElement("cacheDbRegistrationId")]
         public int CacheDbRegistrationId { get; set; }
         [Required]
+        [MaxLength(100)]
         [XmlElement("customerCountry")]
-        public string CustomerCountry { get; set; } = string.Empty;
+        public string? CustomerCountry { get; set; }
     }
-    public class CreateRegistration
+
+    public class Registration
     {
-        // Identification and meta
+        // Identity & metadata
         [XmlElement("actionFlag")]
         public string ActionFlag { get; set; } = string.Empty;
         [XmlElement("customerNumber")]
@@ -55,7 +58,7 @@ namespace Nokas.CashBagManagement.WebAPI.Models
         public decimal RegisteredForeignCurrency { get; set; }
         [XmlElement("totalAmount")]
         public decimal TotalAmount { get; set; }
-        // Location and logistics
+        // Others
         [XmlElement("locationId")]
         public string LocationId { get; set; } = string.Empty;
         [XmlElement("shopNumber")]
@@ -68,20 +71,20 @@ namespace Nokas.CashBagManagement.WebAPI.Models
         public string ForeignCurrencies { get; set; } = string.Empty;
         // Complex types
         [XmlElement("exchangeRates")]
-        public CreateExchangeRates ExchangeRates { get; set; } = new();
+        public ExchangeRates ExchangeRates { get; set; } = new();
         [XmlElement("notes")]
-        public CreateNotes Notes { get; set; } = new();
+        public Notes Notes { get; set; } = new();
         [XmlElement("contracts")]
-        public CreateContracts Contracts { get; set; } = new();
+        public Contracts Contracts { get; set; } = new();
         [XmlElement("vouchers")]
-        public List<CreateVouchers> Vouchers { get; set; } = new();
+        public List<Vouchers> Vouchers { get; set; } = new();
     }
-    public class CreateExchangeRates
+    public class ExchangeRates
     {
         [XmlElement("exchangeRate")]
         public string ExchangeRate { get; set; } = string.Empty;
     }
-    public class CreateNotes
+    public class Notes
     {
         [XmlElement("seddel1000")]
         public string Seddel1000 { get; set; } = string.Empty;
@@ -94,14 +97,15 @@ namespace Nokas.CashBagManagement.WebAPI.Models
         [XmlElement("seddel50")]
         public string Seddel50 { get; set; } = string.Empty;
     }
-    public class CreateContracts
+    public class Contracts
     {
         [XmlElement("containsValuta")]
         public bool ContainsValuta { get; set; }
     }
-    public class CreateVouchers
+    public class Vouchers
     {
         [XmlElement("voucherDetails")]
         public string VoucherDetails { get; set; } = string.Empty;
     }
+
 }
