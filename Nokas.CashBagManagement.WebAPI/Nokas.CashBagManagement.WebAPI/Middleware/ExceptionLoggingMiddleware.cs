@@ -1,6 +1,9 @@
 ﻿using System.Net;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Xml.Serialization;
+using Microsoft.EntityFrameworkCore;
+using Nokas.CashBagManagement.WebAPI.Helpers;
 
 namespace Nokas.CashBagManagement.WebAPI.Middleware
 {
@@ -19,10 +22,7 @@ namespace Nokas.CashBagManagement.WebAPI.Middleware
 
         public async Task Invoke(HttpContext context)
         {
-            // Step 1: First, check for the client-provided X-Correlation-ID in the request headers
             var correlationId = context.Request.Headers["X-Correlation-ID"].ToString();
-
-            // Step 2: If the client has not provided it, use the internal one stored in HttpContext.Items
             if (string.IsNullOrEmpty(correlationId))
             {
                 correlationId = context.Items["CorrelationId"]?.ToString() ?? context.TraceIdentifier;
@@ -40,17 +40,88 @@ namespace Nokas.CashBagManagement.WebAPI.Middleware
                 var controller = routeData.Values["controller"]?.ToString() ?? "Unknown";
                 var action = routeData.Values["action"]?.ToString() ?? "Unknown";
 
-                // Log the error with the correlation ID
-                _logger.LogError(ex,
-                    "Unhandled exception in Controller: {Controller}, Action: {Action}, URI: {Uri}, CorrelationId: {CorrelationId}",
-                    controller, action, fullUrl, correlationId);
-
                 var isDev = _env.IsDevelopment();
+                int statusCode;
+                string title;
+
+                if (ex is DuplicateBagNumberException duplicateEx)
+                {
+                    statusCode = (int)HttpStatusCode.Conflict;
+                    title = duplicateEx.Message;
+
+                    _logger.LogWarning("CorrelationId: {CorrelationId} - Duplicate bag number error: {Message}", correlationId, title);
+                }
+                else if (ex is DbUpdateException dbEx)
+                {
+                    statusCode = (int)HttpStatusCode.BadRequest;
+                    var raw = dbEx.GetBaseException()?.Message ?? dbEx.Message;
+                    string field = null;
+
+                    if (raw.Contains("String or binary data would be truncated"))
+                    {
+                        var match = Regex.Match(raw, @"column '(?<column>[^']+)'");
+                        if (match.Success)
+                            field = match.Groups["column"].Value?.Split('_').LastOrDefault();
+
+                        title = field != null
+                            ? $"The field '{field}' exceeds the allowed length."
+                            : "One of the values is too long for the database field.";
+                    }
+                    else if (raw.Contains("FOREIGN KEY constraint"))
+                    {
+                        var match = Regex.Match(raw, @"FOREIGN KEY constraint ""(?<constraint>[^""]+)""");
+                        var constraint = match.Success ? match.Groups["constraint"].Value : null;
+                        title = constraint != null
+                            ? $"Invalid reference related to constraint '{constraint}'."
+                            : "Invalid reference. A related record does not exist.";
+                    }
+                    else if (raw.Contains("Cannot insert the value NULL into column"))
+                    {
+                        var match = Regex.Match(raw, @"column '(?<column>[^']+)'");
+                        field = match.Success ? match.Groups["column"].Value?.Split('_').LastOrDefault() : null;
+
+                        title = field != null
+                            ? $"Missing required value for '{field}'."
+                            : "Missing required field.";
+                    }
+                    else if (raw.Contains("UNIQUE KEY constraint"))
+                    {
+                        var match = Regex.Match(raw, @"UNIQUE KEY constraint '(?<constraint>[^']+)'");
+                        var constraint = match.Success ? match.Groups["constraint"].Value : null;
+
+                        title = constraint != null
+                            ? $"Duplicate entry detected. Violates uniqueness constraint '{constraint}'."
+                            : "This value must be unique. A record with the same value already exists.";
+                    }
+                    else if (raw.Contains("CHECK constraint"))
+                    {
+                        var match = Regex.Match(raw, @"CHECK constraint '(?<constraint>[^']+)'");
+                        var constraint = match.Success ? match.Groups["constraint"].Value : null;
+
+                        title = constraint != null
+                            ? $"Invalid value. Violates rule '{constraint}'."
+                            : "The value provided violates a business rule.";
+                    }
+                    else
+                    {
+                        title = "Invalid data submitted. Please check your input.";
+                    }
+
+                    _logger.LogWarning(dbEx, "Validation error: {Message}", raw);
+                }
+                else
+                {
+                    title = isDev ? "Unhandled exception occurred." : "An unexpected error occurred.";
+                    statusCode = (int)HttpStatusCode.InternalServerError;
+                    _logger.LogError(ex,
+                        "Unhandled exception in Controller: {Controller}, Action: {Action}, URI: {Uri}, CorrelationId: {CorrelationId}",
+                        controller, action, fullUrl, correlationId);
+                }
 
                 var error = new ErrorResponse
                 {
-                    Title = isDev ? "Unhandled exception occurred." : "An unexpected error occurred.",
-                    Status = (int)HttpStatusCode.InternalServerError,
+                    Title = title,
+                    Status = statusCode,
                     CorrelationId = correlationId,
                     Controller = isDev ? controller : null,
                     Action = isDev ? action : null,
@@ -59,9 +130,8 @@ namespace Nokas.CashBagManagement.WebAPI.Middleware
                     StackTrace = isDev ? ex.StackTrace : null
                 };
 
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                context.Response.StatusCode = statusCode;
 
-                // Determine requested response format (JSON or XML)
                 var acceptHeader = context.Request.Headers["Accept"].ToString().ToLower();
                 if (acceptHeader.Contains("application/xml"))
                 {
@@ -72,7 +142,7 @@ namespace Nokas.CashBagManagement.WebAPI.Middleware
                     ms.Position = 0;
                     await ms.CopyToAsync(context.Response.Body);
                 }
-                else // Default to JSON
+                else
                 {
                     context.Response.ContentType = "application/json";
                     var json = JsonSerializer.Serialize(error,
@@ -82,17 +152,17 @@ namespace Nokas.CashBagManagement.WebAPI.Middleware
             }
         }
     }
-}
 
-public class ErrorResponse
-{
-    public string Title { get; set; }
-    public int Status { get; set; }
-    public string CorrelationId { get; set; }
+    public class ErrorResponse
+    {
+        public string Title { get; set; }
+        public int Status { get; set; }
+        public string CorrelationId { get; set; }
 
-    public string? Controller { get; set; }
-    public string? Action { get; set; }
-    public string? Path { get; set; }
-    public string? Exception { get; set; }
-    public string? StackTrace { get; set; }
+        public string? Controller { get; set; }
+        public string? Action { get; set; }
+        public string? Path { get; set; }
+        public string? Exception { get; set; }
+        public string? StackTrace { get; set; }
+    }
 }

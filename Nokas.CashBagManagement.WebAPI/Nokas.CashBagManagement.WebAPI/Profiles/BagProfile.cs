@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Nokas.CashBagManagement.WebAPI.Entities;
+using Nokas.CashBagManagement.WebAPI.Models;
 
 namespace Nokas.CashBagManagement.WebAPI.Profiles
 {
@@ -6,10 +8,35 @@ namespace Nokas.CashBagManagement.WebAPI.Profiles
     {
         public BagProfile()
         {
-            // Map creation model to domain/response model
-            CreateMap<Models.BagRegistrationForCreation, Models.BagRegistration>();
+            // Entity <-> Model mappings
+            CreateMap<BagRegistrationEntity, BagRegistrationRequest>()
+                .ReverseMap();
 
-            // Optional: Add child mappings if types differ (e.g., ExchangeRateForCreation -> ExchangeRate)
+            CreateMap<Entities.BagRegistration, Models.BagRegistration>()
+                .ReverseMap();
+
+            CreateMap<Entities.BankInfo, Models.BankInfo>()
+                .ReverseMap();
+
+            CreateMap<Entities.ExchangeRate, Models.ExchangeRate>()
+                .ReverseMap();
+
+            CreateMap<Entities.Notes, Models.Notes>()
+                .ReverseMap();
+
+            CreateMap<Entities.Contracts, Models.Contracts>()
+                .ReverseMap();
+
+            CreateMap<Entities.ForeignCurrency, Models.ForeignCurrency>()
+                .ReverseMap();
+
+            CreateMap<Entities.VoucherDetail, Models.VoucherDetail>()
+                .ReverseMap();
+
+            // DTO (ForCreation) -> Model mappings
+            CreateMap<BagRegistrationRequestForCreation, BagRegistrationRequest>();
+
+            CreateMap<Models.BagRegistrationForCreation, Models.BagRegistration>();
             CreateMap<Models.ExchangeRateForCreation, Models.ExchangeRate>();
             CreateMap<Models.ForeignCurrencyForCreation, Models.ForeignCurrency>();
             CreateMap<Models.ContractsForCreation, Models.Contracts>();
@@ -19,4 +46,3 @@ namespace Nokas.CashBagManagement.WebAPI.Profiles
         }
     }
 }
-

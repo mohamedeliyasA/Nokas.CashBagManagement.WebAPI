@@ -1,23 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Xml.Serialization;
 
-namespace Nokas.CashBagManagement.WebAPI.Models
+namespace Nokas.CashBagManagement.WebAPI.Entities
 {
     [XmlRoot("BagRegistrationRequest")]
-    public class BagRegistrationRequest
+    public class BagRegistrationEntity
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
         [XmlElement("BagRegistration")]
         public BagRegistration BagRegistration { get; set; }
-
-        [XmlElement("CacheDbRegistrationId")]
-        public string CacheDbRegistrationId { get; set; }
 
         [XmlElement("RegistrationType")]
         public string RegistrationType { get; set; }
 
         [XmlElement("CustomerCountry")]
         public string CustomerCountry { get; set; }
+
+        [XmlElement("CacheDbRegistrationId")]
+        public string CacheDbRegistrationId { get; set; }
 
         [XmlElement("Status")]
         public string Status { get; set; } = "Registered"; // Optional default
@@ -29,6 +33,7 @@ namespace Nokas.CashBagManagement.WebAPI.Models
     public class BagRegistration
     {
         [XmlElement("ActionFlag")]
+        [MaxLength(3, ErrorMessage = "ActionFlag must not exceed 3 characters.")]
         public string ActionFlag { get; set; }
 
         [XmlElement("CustomerNumber")]

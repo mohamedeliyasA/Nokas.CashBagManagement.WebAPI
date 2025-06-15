@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Nokas.CashBagManagement.WebAPI;
 using Nokas.CashBagManagement.WebAPI.DBContext;
 using Nokas.CashBagManagement.WebAPI.Middleware;
+using Nokas.CashBagManagement.WebAPI.Repository;
 using Serilog;
 
 
@@ -68,10 +69,12 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 #region dependency injection    
 builder.Services.AddSingleton<BagRegistrationDataStore>();
-builder.Services.AddDbContext<CashBagRegistrationContext>(dbContextOptions =>
+builder.Services.AddDbContext<BagRegistrationDBContext>(dbContextOptions =>
                                 dbContextOptions
                                 .UseSqlServer(
         builder.Configuration["ConnectionStrings:CityInfoDBConnectionString"]));
+
+builder.Services.AddScoped<IBagRegistrationRepo, BagRegistrationRepo>();
 #endregion
 
 var app = builder.Build();
