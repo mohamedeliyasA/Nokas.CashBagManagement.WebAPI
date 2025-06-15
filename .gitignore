@@ -4,8 +4,9 @@ obj/
 out/
 .config/
 
-# Logs
+# Folders
 logs/
+Migrations/
 
 # User-specific files
 *.user
