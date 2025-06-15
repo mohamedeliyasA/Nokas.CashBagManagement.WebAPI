@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Nokas.CashBagManagement.WebAPI.Models
 {
     [XmlRoot("BagRegistrationRequest")]
     public class BagRegistrationRequest
     {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
         [XmlElement("BagRegistration")]
         public BagRegistration BagRegistration { get; set; }
 
@@ -21,8 +24,7 @@ namespace Nokas.CashBagManagement.WebAPI.Models
 
         [XmlElement("Status")]
         public string Status { get; set; } = "Registered"; // Optional default
-
-        [XmlIgnore]
+        [JsonProperty("clientId")] 
         public string ClientId { get; set; }
     }
 

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Text.Json;
+using AutoMapper;
 using Azure.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -75,6 +76,7 @@ namespace Nokas.CashBagManagement.WebAPI.Controllers
 
             var newBagRegistrationRequest = new BagRegistrationRequest
             {
+                Id = bagRequest.BagRegistration?.BagNumber,
                 BagRegistration = mappedBagRegistration,
                 CacheDbRegistrationId = bagRequest.CacheDbRegistrationId,
                 RegistrationType = bagRequest.RegistrationType,

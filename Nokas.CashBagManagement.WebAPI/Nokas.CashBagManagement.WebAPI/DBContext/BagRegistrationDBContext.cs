@@ -23,6 +23,10 @@ namespace Nokas.CashBagManagement.WebAPI.DBContext
                     registration.OwnsMany(r => r.ExchangeRates);
                     registration.OwnsMany(r => r.ForeignCurrencies);
                     registration.OwnsMany(r => r.Vouchers);
+
+                    // ✅ Uniqueness constraint on nested BagNumber
+                    registration.Property(r => r.BagNumber).HasColumnName("BagNumber").IsRequired();
+                    registration.HasIndex(r => r.BagNumber).IsUnique(); // ✅ define index in the owned type mapping
                 });
             });
         }

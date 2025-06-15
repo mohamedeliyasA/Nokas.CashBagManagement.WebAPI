@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Azure.Cosmos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Nokas.CashBagManagement.WebAPI;
@@ -69,12 +70,19 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 #region dependency injection    
 builder.Services.AddSingleton<BagRegistrationDataStore>();
-builder.Services.AddDbContext<BagRegistrationDBContext>(dbContextOptions =>
-                                dbContextOptions
-                                .UseSqlServer(
-        builder.Configuration["ConnectionStrings:CityInfoDBConnectionString"]));
+builder.Services.AddSingleton<CosmosClient>(serviceProvider =>
+{
+    var config = builder.Configuration.GetSection("CosmosDb");
+    return new CosmosClient(config["Account"], config["Key"]);
+});
+builder.Services.AddSingleton<IBagRegistrationRepo, CosmosBagRegistrationRepo>();
 
-builder.Services.AddScoped<IBagRegistrationRepo, BagRegistrationRepo>();
+//builder.Services.AddDbContext<BagRegistrationDBContext>(dbContextOptions =>
+//                                dbContextOptions
+//                                .UseSqlServer(
+//        builder.Configuration["ConnectionStrings:CityInfoDBConnectionString"]));
+
+//builder.Services.AddScoped<IBagRegistrationRepo, BagRegistrationRepo>();
 #endregion
 
 var app = builder.Build();

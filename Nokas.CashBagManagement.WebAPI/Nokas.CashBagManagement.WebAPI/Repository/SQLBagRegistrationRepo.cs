@@ -7,13 +7,13 @@ using Nokas.CashBagManagement.WebAPI.Models;
 
 namespace Nokas.CashBagManagement.WebAPI.Repository
 {
-    public class BagRegistrationRepo : IBagRegistrationRepo
+    public class SQLBagRegistrationRepo : IBagRegistrationRepo
     {
         private readonly BagRegistrationDBContext _context;
         private readonly IMapper _mapper;
-        private readonly ILogger<BagRegistrationRepo> _logger;
+        private readonly ILogger<SQLBagRegistrationRepo> _logger;
 
-        public BagRegistrationRepo(BagRegistrationDBContext context, IMapper mapper, ILogger<BagRegistrationRepo> logger)
+        public SQLBagRegistrationRepo(BagRegistrationDBContext context, IMapper mapper, ILogger<SQLBagRegistrationRepo> logger)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
