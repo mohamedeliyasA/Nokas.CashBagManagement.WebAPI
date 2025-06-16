@@ -24,7 +24,7 @@ namespace Nokas.CashBagManagement.WebAPI.Entities
         public string CacheDbRegistrationId { get; set; }
 
         [XmlElement("Status")]
-        public string Status { get; set; } = "Registered"; // Optional default
+        public string Status { get; set; } = "Registered"; 
 
         [XmlIgnore]
         public string ClientId { get; set; }
