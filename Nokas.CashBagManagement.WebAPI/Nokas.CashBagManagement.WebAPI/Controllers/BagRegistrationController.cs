@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using AutoMapper;
 using Azure.Core;
+using Azure.Messaging.ServiceBus;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Nokas.CashBagManagement.WebAPI.Helpers;
 using Nokas.CashBagManagement.WebAPI.Models;
 using Nokas.CashBagManagement.WebAPI.Repository;
+using Nokas.CashBagManagement.WebAPI.Services;
 
 namespace Nokas.CashBagManagement.WebAPI.Controllers
 {
@@ -19,15 +21,21 @@ namespace Nokas.CashBagManagement.WebAPI.Controllers
     {
         private readonly ILogger<BagRegistrationController> _logger;
         private readonly IBagRegistrationRepo _bagRegistrationRepo;
+        private readonly IBlobArchiveService _blobArchiveService;
+        private readonly IServiceBusSender _serviceBusSender;
         private readonly IMapper _mapper;
 
         public BagRegistrationController(
             ILogger<BagRegistrationController> logger,
             IBagRegistrationRepo bagRegistrationRepo,
+            IBlobArchiveService blobArchiveService,
+            IServiceBusSender serviceBusSender,
             IMapper mapper)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _bagRegistrationRepo = bagRegistrationRepo ?? throw new ArgumentNullException(nameof(bagRegistrationRepo));
+            _blobArchiveService = blobArchiveService ?? throw new ArgumentNullException(nameof(blobArchiveService));
+            _serviceBusSender = serviceBusSender ?? throw new ArgumentNullException(nameof(serviceBusSender));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -85,7 +93,13 @@ namespace Nokas.CashBagManagement.WebAPI.Controllers
                 ClientId = clientId // Set the clientId from claims
             };
 
+            await _serviceBusSender.SendMessageAsync(JsonSerializer.Serialize(bagRequest), "BagRegistration");
+
+            var rawPayload = await Request.ReadRawBodyAsStringAsync();
+            await _blobArchiveService.ArchivePayloadAsync($"bag_{DateTime.UtcNow:yyyyMMddHHmmss}", rawPayload);
+
             await _bagRegistrationRepo.CreateBagRegistration(newBagRegistrationRequest);
+           
 
             var response = new BagRegistrationResponse
             {

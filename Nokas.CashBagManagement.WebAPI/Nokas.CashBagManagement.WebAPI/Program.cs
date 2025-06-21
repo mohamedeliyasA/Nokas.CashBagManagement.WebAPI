@@ -6,6 +6,7 @@ using Nokas.CashBagManagement.WebAPI;
 using Nokas.CashBagManagement.WebAPI.DBContext;
 using Nokas.CashBagManagement.WebAPI.Middleware;
 using Nokas.CashBagManagement.WebAPI.Repository;
+using Nokas.CashBagManagement.WebAPI.Services;
 using Serilog;
 
 
@@ -68,7 +69,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-#region dependency injection    
+#region Services Dependency Injection    
 builder.Services.AddSingleton<BagRegistrationDataStore>();
 builder.Services.AddSingleton<CosmosClient>(serviceProvider =>
 {
@@ -83,6 +84,9 @@ builder.Services.AddSingleton<IBagRegistrationRepo, CosmosBagRegistrationRepo>()
 //        builder.Configuration["ConnectionStrings:CityInfoDBConnectionString"]));
 
 //builder.Services.AddScoped<IBagRegistrationRepo, BagRegistrationRepo>();
+
+builder.Services.AddSingleton<IBlobArchiveService, BlobArchiveService>();
+builder.Services.AddSingleton<IServiceBusSender, ServiceBusSender>();
 #endregion
 
 var app = builder.Build();
