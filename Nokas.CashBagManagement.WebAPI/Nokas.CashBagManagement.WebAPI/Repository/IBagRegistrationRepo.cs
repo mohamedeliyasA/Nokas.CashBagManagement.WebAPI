@@ -1,4 +1,5 @@
-﻿using Nokas.CashBagManagement.WebAPI.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using Nokas.CashBagManagement.WebAPI.Models;
 
 namespace Nokas.CashBagManagement.WebAPI.Repository
 {
@@ -7,5 +8,7 @@ namespace Nokas.CashBagManagement.WebAPI.Repository
         Task<BagRegistrationRequest?> GetBagByNumberForClientAsync(string bagNumber, string clientId);
 
         Task<BagRegistrationRequest> CreateBagRegistration(BagRegistrationRequest bagRegistrationRequest);
+
+        Task<BagRegistrationRequest> UpdateBagRegistration(BagRegistrationRequest bagUpdate);
     }
 }

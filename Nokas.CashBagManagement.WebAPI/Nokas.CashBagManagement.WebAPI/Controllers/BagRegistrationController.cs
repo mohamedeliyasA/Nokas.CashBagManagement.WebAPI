@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Nokas.CashBagManagement.WebAPI.Entities;
 using Nokas.CashBagManagement.WebAPI.Helpers;
 using Nokas.CashBagManagement.WebAPI.Models;
 using Nokas.CashBagManagement.WebAPI.Repository;
@@ -15,7 +16,7 @@ using Nokas.CashBagManagement.WebAPI.Services;
 namespace Nokas.CashBagManagement.WebAPI.Controllers
 {
     [Authorize]
-    [Route("api/cashbag/register")]
+    [Route("api/cashbag/")]
     [ApiController]
     public class BagRegistrationController : ControllerBase
     {
@@ -43,14 +44,14 @@ namespace Nokas.CashBagManagement.WebAPI.Controllers
             HttpContext?.Items["CorrelationId"]?.ToString() ?? "N/A";
 
         [HttpGet("{bagNumber}", Name = "GetBagRegistration")]
-        public async Task<ActionResult<BagRegistrationDetailsResponse>> GetBagRegistrationByNumber(string bagNumber)
+        public async Task<ActionResult<BagRegSummaryResponse>> GetBagRegistrationByNumber(string bagNumber)
         {
-            var correlationId = GetCorrelationId();
+            var requestCorrelationId = GetCorrelationId();
             var clientId = ClaimsHelper.GetClientId(User);
 
             if (string.IsNullOrEmpty(clientId))
             {
-                _logger.LogWarning("CorrelationId: {CorrelationId} - Missing clientId.", correlationId);
+                _logger.LogWarning("RequestCorrelationId: {CorrelationId} - Missing clientId.", requestCorrelationId);
                 return Unauthorized();
             }
 
@@ -60,55 +61,141 @@ namespace Nokas.CashBagManagement.WebAPI.Controllers
             {
                 return NotFound($"No bag found with the BagNumber: {bagNumber} for this client with Id: {clientId}.");
             }
-            var response = _mapper.Map<BagRegistrationDetailsResponse>(bagRegistration);
 
-            return Ok(response);
+
+            // Append a 'Read' operation entry
+            bagRegistration.OperationHistory.Add(new OperationHistoryEntry
+            {
+                Action = "Read",
+                Timestamp = DateTime.UtcNow,
+                CorrelationId = bagRegistration.CorrelationId,
+                RequestCorrelationId = requestCorrelationId,
+                PerformedBy = clientId
+            });
+
+            // Save updated document (Upsert)
+            await _bagRegistrationRepo.UpdateBagRegistration(bagRegistration);
+
+            var bagSummary = _mapper.Map<BagRegSummaryResponse>(bagRegistration);
+            bagSummary.Description = "Bag Retrieved Successfully";
+            bagSummary.RequestCorrelationId = requestCorrelationId;
+
+
+            return Ok(bagSummary);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<BagRegistrationResponse>> CreateBagRegistration(BagRegistrationRequestForCreation bagRequest)
+        [HttpPost("register")]
+        public async Task<ActionResult<BagRegSummaryResponse>> CreateBagRegistration(BagRegistrationRequestForCreation bagRequest)
         {
-            var correlationId = GetCorrelationId();
+            var requestCorrelationId = GetCorrelationId();
             var clientId = ClaimsHelper.GetClientId(User);
 
             if (bagRequest == null || !ModelState.IsValid)
             {
-                _logger.LogError("CorrelationId: {CorrelationId} - Invalid model or bad request for {RequestPath}.", correlationId, Request.Path);
+                _logger.LogError("CorrelationId: {CorrelationId} - Invalid model or bad request for {RequestPath}.", requestCorrelationId, Request.Path);
                 return BadRequest("Invalid request data");
             }
-
-            var mappedBagRegistration = _mapper.Map<BagRegistration>(bagRequest.BagRegistration);
-
-            var newBagRegistrationRequest = new BagRegistrationRequest
-            {
-                Id = bagRequest.BagRegistration?.BagNumber,
-                BagRegistration = mappedBagRegistration,
-                CacheDbRegistrationId = bagRequest.CacheDbRegistrationId,
-                RegistrationType = bagRequest.RegistrationType,
-                CustomerCountry = bagRequest.CustomerCountry,
-                Status = "In-Progress", // Default status
-                ClientId = clientId // Set the clientId from claims
-            };
 
             await _serviceBusSender.SendMessageAsync(JsonSerializer.Serialize(bagRequest), "BagRegistration");
 
             var rawPayload = await Request.ReadRawBodyAsStringAsync();
             await _blobArchiveService.ArchivePayloadAsync($"bag_{DateTime.UtcNow:yyyyMMddHHmmss}", rawPayload);
 
-            await _bagRegistrationRepo.CreateBagRegistration(newBagRegistrationRequest);
-           
+            var newBagRegistrationRequest = _mapper.Map<BagRegistrationRequest>(bagRequest);
+            newBagRegistrationRequest.ClientId = clientId;
+            newBagRegistrationRequest.CorrelationId = requestCorrelationId;
 
-            var response = new BagRegistrationResponse
+            newBagRegistrationRequest.OperationHistory.Add(new OperationHistoryEntry
             {
-                BagNumber = bagRequest.BagRegistration?.BagNumber,
-                Status = "Success",
-                Message = "Bag registration created successfully.",
-                CorrelationId = correlationId
-            };
+                Action = "Create",
+                Timestamp = DateTime.UtcNow,
+                CorrelationId = newBagRegistrationRequest.CorrelationId,
+                RequestCorrelationId = requestCorrelationId,
+                PerformedBy = clientId
+            });
 
-            _logger.LogInformation("CorrelationId: {CorrelationId} - Bag registration created successfully.", correlationId);
+            await _bagRegistrationRepo.CreateBagRegistration(newBagRegistrationRequest);
 
+            var bagSummary = _mapper.Map<BagRegSummaryResponse>(newBagRegistrationRequest);
+            bagSummary.Description = "Bag Created Successfully";
+            bagSummary.RequestCorrelationId = requestCorrelationId;
+
+            _logger.LogInformation("CorrelationId: {CorrelationId} - Bag registration created successfully.", requestCorrelationId);
+
+            return Ok(bagSummary);
+        }
+
+        [HttpPut("{bagNumber}")]
+        public async Task<ActionResult<BagRegSummaryResponse>> UpdateBagRegistration(string bagNumber, [FromBody] BagRegistrationRequestForCreation updatedPayload)
+        {
+            var requestCorrelationId = GetCorrelationId();
+            var clientId = ClaimsHelper.GetClientId(User);
+
+            var existing = await _bagRegistrationRepo.GetBagByNumberForClientAsync(bagNumber, clientId);
+            if (existing == null)
+            {
+                _logger.LogWarning("CorrelationId: {RequestCorrelationId} - Bag {BagNumber} not found for update.", requestCorrelationId, bagNumber);
+                return NotFound("Bag not found.");
+            }
+
+            await _serviceBusSender.SendMessageAsync(JsonSerializer.Serialize(updatedPayload), "BagRegistration");
+
+            var rawPayload = await Request.ReadRawBodyAsStringAsync();
+            await _blobArchiveService.ArchivePayloadAsync($"bag_{DateTime.UtcNow:yyyyMMddHHmmss}", rawPayload);
+
+            var updatedBag = _mapper.Map<Models.BagRegistration>(updatedPayload.BagRegistration);
+            existing.BagRegistration = updatedBag;
+            existing.CacheDbRegistrationId = updatedPayload.CacheDbRegistrationId;
+            existing.RegistrationType = updatedPayload.RegistrationType;
+            existing.CustomerCountry = updatedPayload.CustomerCountry;
+            existing.Status = "Updated";
+ 
+
+            existing.OperationHistory.Add(new OperationHistoryEntry
+            {
+                Action = "Update",
+                Timestamp = DateTime.UtcNow,
+                CorrelationId = existing.CorrelationId,
+                PerformedBy = clientId
+            });
+
+            await _bagRegistrationRepo.UpdateBagRegistration(existing);
+
+            var response = _mapper.Map<BagRegSummaryResponse>(existing);
+            response.Description = "Bag registration updated successfully.";
+            response.RequestCorrelationId = requestCorrelationId;
             return Ok(response);
         }
+
+        [HttpDelete("{bagNumber}")]
+        public async Task<ActionResult<BagRegSummaryResponse>> DeleteBagRegistration(string bagNumber)
+        {
+            var requestCorrelationId = GetCorrelationId();
+            var clientId = ClaimsHelper.GetClientId(User);
+
+            var existing = await _bagRegistrationRepo.GetBagByNumberForClientAsync(bagNumber, clientId);
+            if (existing == null)
+                return NotFound();
+
+            existing.Status = "Deleted";
+
+            existing.OperationHistory.Add(new OperationHistoryEntry
+            {
+                Action = "Delete",
+                Timestamp = DateTime.UtcNow,
+                CorrelationId = existing.CorrelationId,
+                RequestCorrelationId = requestCorrelationId,
+                PerformedBy = clientId
+            });
+
+            await _bagRegistrationRepo.UpdateBagRegistration(existing);
+
+            var response = _mapper.Map<BagRegSummaryResponse>(existing);
+            response.Description = "Bag deleted successfully.";
+            response.RequestCorrelationId = requestCorrelationId;
+            response.CorrelationId = existing.CorrelationId;
+            return Ok(response);
+        }
+
     }
 }

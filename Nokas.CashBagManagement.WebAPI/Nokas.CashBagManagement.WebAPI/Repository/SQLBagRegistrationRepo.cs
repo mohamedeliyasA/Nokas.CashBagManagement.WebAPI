@@ -56,5 +56,9 @@ namespace Nokas.CashBagManagement.WebAPI.Repository
             }
         }
 
+        public Task<BagRegistrationRequest> UpdateBagRegistration(BagRegistrationRequest bagUpdate)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

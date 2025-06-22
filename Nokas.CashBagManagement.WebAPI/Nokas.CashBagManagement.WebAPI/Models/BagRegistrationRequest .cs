@@ -26,5 +26,8 @@ namespace Nokas.CashBagManagement.WebAPI.Models
         public string Status { get; set; } = "Registered"; // Optional default
         [JsonProperty("clientId")] 
         public string ClientId { get; set; }
+        public string CorrelationId { get; set; }
+
+        public List<OperationHistoryEntry> OperationHistory { get; set; } = new();
     }
 }

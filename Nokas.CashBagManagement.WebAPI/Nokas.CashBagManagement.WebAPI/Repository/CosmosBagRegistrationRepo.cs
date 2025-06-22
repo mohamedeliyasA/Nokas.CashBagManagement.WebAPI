@@ -52,7 +52,6 @@ namespace Nokas.CashBagManagement.WebAPI.Repository
                 throw;
             }
         }
-
       
         public async Task<BagRegistrationRequest> CreateBagRegistration(BagRegistrationRequest bagRegistrationRequest)
         {
@@ -81,5 +80,14 @@ namespace Nokas.CashBagManagement.WebAPI.Repository
                 throw;
             }
         }
+
+        public async Task<BagRegistrationRequest> UpdateBagRegistration(BagRegistrationRequest bagUpdate)
+        {
+            if (bagUpdate == null) throw new ArgumentNullException(nameof(bagUpdate));
+
+            var response = await _container.UpsertItemAsync(bagUpdate, new PartitionKey(bagUpdate.ClientId));
+            return response.Resource;
+        }
+
     }
 }
