@@ -43,7 +43,7 @@ namespace Nokas.CashBagManagement.WebAPI.Controllers
             HttpContext?.Items["CorrelationId"]?.ToString() ?? "N/A";
 
         [HttpGet("{bagNumber}", Name = "GetBagRegistration")]
-        public async Task<ActionResult<BagRegistrationRequest>> GetBagRegistrationByNumber(string bagNumber)
+        public async Task<ActionResult<BagRegistrationDetailsResponse>> GetBagRegistrationByNumber(string bagNumber)
         {
             var correlationId = GetCorrelationId();
             var clientId = ClaimsHelper.GetClientId(User);
@@ -60,8 +60,9 @@ namespace Nokas.CashBagManagement.WebAPI.Controllers
             {
                 return NotFound($"No bag found with the BagNumber: {bagNumber} for this client with Id: {clientId}.");
             }
+            var response = _mapper.Map<BagRegistrationDetailsResponse>(bagRegistration);
 
-            return Ok(bagRegistration);
+            return Ok(response);
         }
 
         [HttpPost]

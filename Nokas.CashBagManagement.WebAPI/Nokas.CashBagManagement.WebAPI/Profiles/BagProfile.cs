@@ -22,13 +22,16 @@ namespace Nokas.CashBagManagement.WebAPI.Profiles
 
             // ✅ DTO (ForCreation) → Model mappings
             CreateMap<BagRegistrationRequestForCreation, BagRegistrationRequest>();
-            CreateMap<Models.BagRegistrationForCreation, Models.BagRegistration>();
-            CreateMap<Models.ExchangeRateForCreation, Models.ExchangeRate>();
-            CreateMap<Models.ForeignCurrencyForCreation, Models.ForeignCurrency>();
-            CreateMap<Models.ContractsForCreation, Models.Contracts>();
-            CreateMap<Models.NotesForCreation, Models.Notes>();
-            CreateMap<Models.VoucherDetailForCreation, Models.VoucherDetail>();
-            CreateMap<Models.BankInfoForCreation, Models.BankInfo>();
+            CreateMap<Models.BagRegistration, Models.BagRegistration>();
+            CreateMap<Models.ExchangeRate, Models.ExchangeRate>();
+            CreateMap<Models.ForeignCurrency, Models.ForeignCurrency>();
+            CreateMap<Models.Contracts, Models.Contracts>();
+            CreateMap<Models.Notes, Models.Notes>();
+            CreateMap<Models.VoucherDetail, Models.VoucherDetail>();
+            CreateMap<Models.BankInfo, Models.BankInfo>();
+
+            // Cosmos/SQL ↔ Domain
+            CreateMap<BagRegistrationRequest, BagRegistrationDetailsResponse>();
         }
     }
 }
