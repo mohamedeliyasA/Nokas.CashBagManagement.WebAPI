@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace Nokas.CashBagManagement.WebAPI.Models
 {
-    [XmlRoot("BagRegistration")]
+    [XmlRoot("BagRegistrationRequest")]
     public class BagRegistrationRequest
     {
         [JsonProperty("id")]

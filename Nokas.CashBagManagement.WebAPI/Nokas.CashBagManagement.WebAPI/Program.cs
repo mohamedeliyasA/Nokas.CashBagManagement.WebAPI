@@ -19,10 +19,10 @@ Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .CreateLogger();
 
+#region authentication
 // Configure Azure AD settings
 var azureAD = builder.Configuration.GetSection("AzureAd");
 
-#region authentication
 // Configure authentication with JWT Bearer
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -61,12 +61,7 @@ builder.Services.AddControllers(options =>
 {
     options.ReturnHttpNotAcceptable = true;
 })
-.AddNewtonsoftJson(options =>
-{
-    //forcing to get the camelcase
-    options.SerializerSettings.ContractResolver =
-        new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver();
-})
+.AddNewtonsoftJson()
 .AddXmlSerializerFormatters();
 
 

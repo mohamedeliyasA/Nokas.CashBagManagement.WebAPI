@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Nokas.CashBagManagement.WebAPI.CosmosModels;
 using Nokas.CashBagManagement.WebAPI.Entities;
 using Nokas.CashBagManagement.WebAPI.Models;
 
