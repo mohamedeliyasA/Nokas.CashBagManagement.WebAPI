@@ -46,10 +46,10 @@ namespace Nokas.CashBagManagement.WebAPI.Controllers
         public async Task<ActionResult<BagRegistrationRequest>> GetBagRegistrationByNumber(string bagNumber)
         {
             var correlationId = GetCorrelationId();
-            foreach (var claim in User.Claims)
-            {
-                Console.WriteLine($"Claim: {claim.Type} = {claim.Value}");
-            }
+            //foreach (var claim in User.Claims)
+            //{
+            //    Console.WriteLine($"Claim: {claim.Type} = {claim.Value}");
+            //}
             var clientId = ClaimsHelper.GetClientId(User);
 
             if (string.IsNullOrEmpty(clientId))

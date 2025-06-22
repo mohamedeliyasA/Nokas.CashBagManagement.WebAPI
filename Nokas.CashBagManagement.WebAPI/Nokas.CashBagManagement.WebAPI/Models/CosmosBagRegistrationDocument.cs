@@ -1,218 +1,267 @@
-﻿
-using System.Xml.Serialization;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 
-namespace Nokas.CashBagManagement.WebAPI.Models
+namespace Nokas.CashBagManagement.WebAPI.CosmosModels
 {
-    [XmlRoot("BagRegistration")]
-    public class BagRegistrationRequest
+    public class CosmosBagRegistrationDocument
     {
         [JsonProperty("id")]
-        public string Id { get; set; }
+        public string Id => BagRegistration?.BagNumber;
 
-        [XmlElement("BagRegistration")]
+        [JsonProperty("clientId")]
+        public string ClientId { get; set; }
+
+        [JsonProperty("bagRegistration")]
         public BagRegistration BagRegistration { get; set; }
 
-        [XmlElement("CacheDbRegistrationId")]
+        [JsonProperty("cacheDbRegistrationId")]
         public string CacheDbRegistrationId { get; set; }
 
-        [XmlElement("RegistrationType")]
+        [JsonProperty("registrationType")]
         public string RegistrationType { get; set; }
 
-        [XmlElement("CustomerCountry")]
+        [JsonProperty("customerCountry")]
         public string CustomerCountry { get; set; }
 
-        [XmlElement("Status")]
-        public string Status { get; set; } = "Registered"; // Optional default
-        [JsonProperty("clientId")] 
-        public string ClientId { get; set; }
+        [JsonProperty("status")]
+        public string Status { get; set; } = "Registered";
     }
 
     public class BagRegistration
     {
-        [XmlElement("ActionFlag")]
+        [JsonProperty("actionFlag")]
         public string ActionFlag { get; set; }
 
-        [XmlElement("CustomerNumber")]
+        [JsonProperty("customerNumber")]
         public string CustomerNumber { get; set; }
 
-        [XmlElement("CustomerName")]
+        [JsonProperty("customerName")]
         public string CustomerName { get; set; }
 
-        [XmlElement("BankInfo")]
+        [JsonProperty("bankInfo")]
         public BankInfo BankInfo { get; set; }
 
-        [XmlElement("CustomerAddress")]
+        [JsonProperty("customerAddress")]
         public string CustomerAddress { get; set; }
 
-        [XmlElement("RegisteredName")]
+        [JsonProperty("registeredName")]
         public string RegisteredName { get; set; }
 
-        [XmlElement("BagNumber")]
+        [JsonProperty("bagNumber")]
         public string BagNumber { get; set; }
 
-        [XmlElement("TurnoverDate")]
+        [JsonProperty("turnoverDate")]
         public DateTime TurnoverDate { get; set; }
 
-        [XmlElement("ReferenceStatement")]
+        [JsonProperty("referenceStatement")]
         public string ReferenceStatement { get; set; }
 
-        [XmlArray("ExchangeRates")]
-        [XmlArrayItem("ExchangeRate")]
+        [JsonProperty("exchangeRates")]
         public List<ExchangeRate> ExchangeRates { get; set; }
 
-        [XmlElement("RegistrationDate")]
+        [JsonProperty("registrationDate")]
         public DateTime RegistrationDate { get; set; }
 
-        [XmlElement("RegisteredBy")]
+        [JsonProperty("registeredBy")]
         public string RegisteredBy { get; set; }
 
-        [XmlElement("RegisteredCoins")]
+        [JsonProperty("registeredCoins")]
         public string RegisteredCoins { get; set; }
 
-        [XmlElement("RegisteredCash")]
+        [JsonProperty("registeredCash")]
         public string RegisteredCash { get; set; }
 
-        [XmlElement("RegisteredChecks")]
+        [JsonProperty("registeredChecks")]
         public string RegisteredChecks { get; set; }
 
-        [XmlElement("RegisteredForeignCurrency")]
+        [JsonProperty("registeredForeignCurrency")]
         public string RegisteredForeignCurrency { get; set; }
 
-        [XmlElement("CountedAmount")]
+        [JsonProperty("countedAmount")]
         public string CountedAmount { get; set; }
 
-        [XmlElement("CountedDate")]
+        [JsonProperty("countedDate")]
         public DateTime CountedDate { get; set; }
 
-        [XmlElement("TotalAmount")]
+        [JsonProperty("totalAmount")]
         public string TotalAmount { get; set; }
 
-        [XmlElement("LocationId")]
+        [JsonProperty("locationId")]
         public string LocationId { get; set; }
 
-        [XmlElement("Location")]
+        [JsonProperty("location")]
         public string Location { get; set; }
 
-        [XmlElement("ShopNumber")]
+        [JsonProperty("shopNumber")]
         public string ShopNumber { get; set; }
 
-        [XmlElement("EasySafeAccount")]
+        [JsonProperty("easySafeAccount")]
         public string EasySafeAccount { get; set; }
 
-        [XmlElement("RegistrationApproval")]
+        [JsonProperty("registrationApproval")]
         public string RegistrationApproval { get; set; }
 
-        [XmlElement("IsBankAccount")]
+        [JsonProperty("isBankAccount")]
         public string IsBankAccount { get; set; }
 
-        [XmlElement("Notes")]
+        [JsonProperty("notes")]
         public Notes Notes { get; set; }
 
-        [XmlElement("RegistrationStatus")]
+        [JsonProperty("registrationStatus")]
         public string RegistrationStatus { get; set; }
 
-        [XmlElement("Contracts")]
+        [JsonProperty("contracts")]
         public Contracts Contracts { get; set; }
 
-        [XmlElement("PickedUpDate")]
+        [JsonProperty("pickedUpDate")]
         public DateTime PickedUpDate { get; set; }
 
-        [XmlElement("NightSafeId")]
+        [JsonProperty("nightSafeId")]
         public string NightSafeId { get; set; }
 
-        [XmlElement("RegistrationSubType")]
+        [JsonProperty("registrationSubType")]
         public string RegistrationSubType { get; set; }
 
-        [XmlArray("ForeignCurrencies")]
-        [XmlArrayItem("ForeignCurrency")]
+        [JsonProperty("foreignCurrencies")]
         public List<ForeignCurrency> ForeignCurrencies { get; set; }
 
-        [XmlElement("CustomerCountry")]
+        [JsonProperty("customerCountry")]
         public string CustomerCountry { get; set; }
 
-        [XmlElement("ConfirmFlag")]
+        [JsonProperty("confirmFlag")]
         public string ConfirmFlag { get; set; }
 
-        [XmlElement("RegisteredUserId")]
+        [JsonProperty("registeredUserId")]
         public string RegisteredUserId { get; set; }
 
-        [XmlElement("ConfirmDateTime")]
+        [JsonProperty("confirmDateTime")]
         public DateTime ConfirmDateTime { get; set; }
 
-        [XmlElement("DropNSName")]
+        [JsonProperty("dropNSName")]
         public string DropNSName { get; set; }
 
-        [XmlElement("DropNSDateTime")]
+        [JsonProperty("dropNSDateTime")]
         public DateTime DropNSDateTime { get; set; }
 
-        [XmlArray("Vouchers")]
-        [XmlArrayItem("VoucherDetails")]
+        [JsonProperty("vouchers")]
         public List<VoucherDetail> Vouchers { get; set; }
     }
 
     public class BankInfo
     {
+        [JsonProperty("actingBranchName")]
         public string ActingBranchName { get; set; }
+
+        [JsonProperty("actingBranchId")]
         public string ActingBranchId { get; set; }
+
+        [JsonProperty("mainBankName")]
         public string MainBankName { get; set; }
+
+        [JsonProperty("mainBankId")]
         public string MainBankId { get; set; }
     }
 
     public class ExchangeRate
     {
+        [JsonProperty("foreignCurrencyCode")]
         public string ForeignCurrencyCode { get; set; }
+
+        [JsonProperty("foreignCurrencyAmt")]
         public string ForeignCurrencyAmt { get; set; }
 
-        [XmlElement("ExchangeRate")]
+        [JsonProperty("exchangeRate")]
         public string ExchangeRateValue { get; set; }
 
+        [JsonProperty("amountInLocalCurrency")]
         public string AmountInLocalCurrency { get; set; }
     }
 
     public class Notes
     {
+        [JsonProperty("seddel1000")]
         public string Seddel1000 { get; set; }
+
+        [JsonProperty("seddel500")]
         public string Seddel500 { get; set; }
+
+        [JsonProperty("seddel200")]
         public string Seddel200 { get; set; }
+
+        [JsonProperty("seddel100")]
         public string Seddel100 { get; set; }
+
+        [JsonProperty("seddel50")]
         public string Seddel50 { get; set; }
     }
 
     public class Contracts
     {
+        [JsonProperty("isPDADeclared")]
         public string IsPDADeclared { get; set; }
+
+        [JsonProperty("deviationType")]
         public string DeviationType { get; set; }
+
+        [JsonProperty("declarationType")]
         public string DeclarationType { get; set; }
+
+        [JsonProperty("containsValuta")]
         public string ContainsValuta { get; set; }
+
+        [JsonProperty("controlledAmount")]
         public string ControlledAmount { get; set; }
     }
 
     public class ForeignCurrency
     {
+        [JsonProperty("currencyISOCode")]
         public string CurrencyISOCode { get; set; }
+
+        [JsonProperty("buyNotes")]
         public string BuyNotes { get; set; }
+
+        [JsonProperty("notesAmountNok")]
         public string NotesAmountNok { get; set; }
+
+        [JsonProperty("notesAmountCurrency")]
         public string NotesAmountCurrency { get; set; }
+
+        [JsonProperty("buyCheques")]
         public string BuyCheques { get; set; }
+
+        [JsonProperty("chequesAmountNOK")]
         public string ChequesAmountNOK { get; set; }
+
+        [JsonProperty("chequesAmountCurrency")]
         public string ChequesAmountCurrency { get; set; }
+
+        [JsonProperty("currencyAmount")]
         public string CurrencyAmount { get; set; }
 
-        [XmlElement("RegDate")]
+        [JsonProperty("regDate")]
         public DateTime RegDate { get; set; }
 
+        [JsonProperty("itemId")]
         public string ItemId { get; set; }
 
-        [XmlElement("ExchangeRate")]
+        [JsonProperty("exchangeRate")]
         public string ExchangeRate { get; set; }
     }
 
     public class VoucherDetail
     {
+        [JsonProperty("voucherNumber")]
         public string VoucherNumber { get; set; }
+
+        [JsonProperty("voucherAmount")]
         public string VoucherAmount { get; set; }
+
+        [JsonProperty("bankBranchNumber")]
         public string BankBranchNumber { get; set; }
+
+        [JsonProperty("bankBranchName")]
         public string BankBranchName { get; set; }
     }
 }

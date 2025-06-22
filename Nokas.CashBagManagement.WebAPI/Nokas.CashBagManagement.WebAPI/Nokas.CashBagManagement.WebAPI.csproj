@@ -31,6 +31,7 @@
 
   <ItemGroup>
     <Folder Include="logs\" />
+    <Folder Include="SamplePayload\" />
   </ItemGroup>
 
 </Project>

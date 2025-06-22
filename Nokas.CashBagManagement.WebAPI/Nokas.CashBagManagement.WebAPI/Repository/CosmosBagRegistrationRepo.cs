@@ -1,9 +1,10 @@
-﻿using Microsoft.Azure.Cosmos;
+﻿using System.Text.Json;
+using AutoMapper;
+using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Nokas.CashBagManagement.WebAPI.CosmosModels;
 using Nokas.CashBagManagement.WebAPI.Models;
-using AutoMapper;
-using System.Text.Json;
 
 namespace Nokas.CashBagManagement.WebAPI.Repository
 {
@@ -53,6 +54,7 @@ namespace Nokas.CashBagManagement.WebAPI.Repository
             }
         }
 
+      
         public async Task<BagRegistrationRequest> CreateBagRegistration(BagRegistrationRequest bagRegistrationRequest)
         {
             if (bagRegistrationRequest == null)
@@ -60,11 +62,17 @@ namespace Nokas.CashBagManagement.WebAPI.Repository
 
             try
             {
-                // Default value as per SQL version
+ 
                 bagRegistrationRequest.BagRegistration.RegistrationStatus ??= "In-Progress";
 
                 var clientId = bagRegistrationRequest.ClientId;
-
+                // 🔍 Log the JSON as-is (PascalCase preserved)
+                var json = JsonSerializer.Serialize(bagRegistrationRequest, new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                    PropertyNamingPolicy = null // ✅ Ensures no camelCase conversion
+                });
+                _logger.LogInformation("Payload to Cosmos DB:\n{Json}", json);
 
                 var response = await _container.CreateItemAsync(bagRegistrationRequest, new PartitionKey(clientId));
 

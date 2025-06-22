@@ -10,15 +10,14 @@ using Nokas.CashBagManagement.WebAPI.Services;
 using Serilog;
 
 
-Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Information()
-    .WriteTo.Console()
-    .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Minute)
-    .CreateLogger();
+
 
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog();
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .CreateLogger();
 
 // Configure Azure AD settings
 var azureAD = builder.Configuration.GetSection("AzureAd");
@@ -57,12 +56,20 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 #region json and xml support
 // Add controllers with JSON and XML support
+
 builder.Services.AddControllers(options =>
 {
     options.ReturnHttpNotAcceptable = true;
 })
-.AddNewtonsoftJson()
+.AddNewtonsoftJson(options =>
+{
+    //forcing to get the camelcase
+    options.SerializerSettings.ContractResolver =
+        new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver();
+})
 .AddXmlSerializerFormatters();
+
+
 #endregion
 
 builder.Services.AddEndpointsApiExplorer();
@@ -76,14 +83,14 @@ builder.Services.AddSingleton<CosmosClient>(serviceProvider =>
     var config = builder.Configuration.GetSection("CosmosDb");
     return new CosmosClient(config["Account"], config["Key"]);
 });
-builder.Services.AddSingleton<IBagRegistrationRepo, CosmosBagRegistrationRepo>();
+//builder.Services.AddSingleton<IBagRegistrationRepo, CosmosBagRegistrationRepo>();
 
 //builder.Services.AddDbContext<BagRegistrationDBContext>(dbContextOptions =>
 //                                dbContextOptions
 //                                .UseSqlServer(
 //        builder.Configuration["ConnectionStrings:CityInfoDBConnectionString"]));
 
-//builder.Services.AddScoped<IBagRegistrationRepo, BagRegistrationRepo>();
+builder.Services.AddScoped<IBagRegistrationRepo, CosmosBagRegistrationRepo>();
 
 builder.Services.AddSingleton<IBlobArchiveService, BlobArchiveService>();
 builder.Services.AddSingleton<IServiceBusSender, ServiceBusSender>();

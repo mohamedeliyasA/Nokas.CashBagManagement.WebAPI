@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace Nokas.CashBagManagement.WebAPI.Models
 {
-    [XmlRoot("BagRegistrationRequestForCreation")]
+    [XmlRoot("BagRegistrationRequest")]
     public class BagRegistrationRequestForCreation
     {
         [XmlElement("BagRegistration")]
