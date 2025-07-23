@@ -61,7 +61,7 @@ namespace Nokas.CashBagManagement.WebAPI.Repository
             try
             {
  
-                bagRegistrationRequest.BagRegistration.RegistrationStatus ??= "In-Progress";
+                
 
                 var clientId = bagRegistrationRequest.ClientId;
 

@@ -13,12 +13,7 @@ namespace Nokas.CashBagManagement.WebAPI.Profiles
             // SQL Entity <-> Model mappings
             CreateMap<BagRegistrationEntity, BagRegistrationRequest>().ReverseMap();
             CreateMap<Entities.BagRegistration, Models.BagRegistration>().ReverseMap();
-            CreateMap<Entities.BankInfo, Models.BankInfo>().ReverseMap();
-            CreateMap<Entities.ExchangeRate, Models.ExchangeRate>().ReverseMap();
-            CreateMap<Entities.Notes, Models.Notes>().ReverseMap();
-            CreateMap<Entities.Contracts, Models.Contracts>().ReverseMap();
-            CreateMap<Entities.ForeignCurrency, Models.ForeignCurrency>().ReverseMap();
-            CreateMap<Entities.VoucherDetail, Models.VoucherDetail>().ReverseMap();
+           
 
             // DTO (ForCreation) → Model mappings
             CreateMap<BagRegistrationRequestForCreation, BagRegistrationRequest>()
@@ -27,7 +22,7 @@ namespace Nokas.CashBagManagement.WebAPI.Profiles
                 .ForMember(dest => dest.CacheDbRegistrationId, opt => opt.MapFrom(src => src.CacheDbRegistrationId))
                 .ForMember(dest => dest.RegistrationType, opt => opt.MapFrom(src => src.RegistrationType))
                 .ForMember(dest => dest.CustomerCountry, opt => opt.MapFrom(src => src.CustomerCountry))
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(_ => "In-Progress"))
+                .ForMember(dest => dest.RegistrationStatus, opt => opt.MapFrom(_ => "In-Progress"))
                 .ForMember(dest => dest.ClientId, opt => opt.Ignore())
                 .ForMember(dest => dest.CorrelationId, opt => opt.Ignore());
 
@@ -37,7 +32,7 @@ namespace Nokas.CashBagManagement.WebAPI.Profiles
                 .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.BagRegistration.CustomerName))
                 .ForMember(dest => dest.BagNumber, opt => opt.MapFrom(src => src.BagRegistration.BagNumber))
                 .ForMember(dest => dest.ActionFlag, opt => opt.MapFrom(src => src.BagRegistration.ActionFlag))
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.RegistrationStatus))
                 .ForMember(dest => dest.CacheDbRegistrationId, opt => opt.MapFrom(src => src.CacheDbRegistrationId))
                 .ForMember(dest => dest.CorrelationId, opt => opt.MapFrom(src => src.CorrelationId));
 
@@ -46,7 +41,7 @@ namespace Nokas.CashBagManagement.WebAPI.Profiles
     .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.BagRegistration.CustomerName))
     .ForMember(dest => dest.BagNumber, opt => opt.MapFrom(src => src.BagRegistration.BagNumber))
     .ForMember(dest => dest.ActionFlag, opt => opt.MapFrom(src => src.BagRegistration.ActionFlag))
-    .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
+    .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.RegistrationStatus))
     .ForMember(dest => dest.CacheDbRegistrationId, opt => opt.MapFrom(src => src.CacheDbRegistrationId))
     .ForMember(dest => dest.CorrelationId, opt => opt.MapFrom(src => src.CorrelationId))
     .ForMember(dest => dest.RequestCorrelationId, opt => opt.Ignore()) // set manually

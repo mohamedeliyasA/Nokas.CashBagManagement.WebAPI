@@ -173,7 +173,7 @@ namespace Nokas.CashBagManagement.WebAPI.Controllers
             existing.CacheDbRegistrationId = updatedPayload.CacheDbRegistrationId;
             existing.RegistrationType = updatedPayload.RegistrationType;
             existing.CustomerCountry = updatedPayload.CustomerCountry;
-            existing.Status = "Updated";
+            existing.RegistrationStatus = "Updated";
 
             existing.OperationHistory.Add(new OperationHistoryEntry
             {
@@ -209,7 +209,7 @@ namespace Nokas.CashBagManagement.WebAPI.Controllers
             if (existing == null)
                 return NotFound();
 
-            existing.Status = "Deleted";
+            existing.RegistrationStatus = "Deleted";
 
             existing.OperationHistory.Add(new OperationHistoryEntry
             {

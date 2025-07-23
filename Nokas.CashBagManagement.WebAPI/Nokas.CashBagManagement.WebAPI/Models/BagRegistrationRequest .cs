@@ -1,4 +1,4 @@
-﻿
+﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 
@@ -22,10 +22,15 @@ namespace Nokas.CashBagManagement.WebAPI.Models
         [XmlElement("CustomerCountry")]
         public string CustomerCountry { get; set; }
 
-        [XmlElement("Status")]
-        public string Status { get; set; } = "Registered"; // Optional default
-        [JsonProperty("clientId")] 
+        /// <summary>
+        /// Used internally to track registration lifecycle. Not required from consumer.
+        /// </summary>
+        [XmlElement("RegistrationStatus")]
+        public string RegistrationStatus { get; set; } = "Registered"; // Default to Registered
+
+        [JsonProperty("clientId")]
         public string ClientId { get; set; }
+
         public string CorrelationId { get; set; }
 
         public List<OperationHistoryEntry> OperationHistory { get; set; } = new();
