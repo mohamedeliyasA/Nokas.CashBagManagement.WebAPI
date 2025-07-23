@@ -23,6 +23,9 @@ namespace Nokas.CashBagManagement.WebAPI.Models
         [XmlElement("RegisteredName")]
         public string RegisteredName { get; set; }
 
+        /// <summary>
+        /// Unique bag number. Must be alphanumeric and 8-12 characters long.
+        /// </summary>
         [XmlElement("BagNumber")]
         public string BagNumber { get; set; }
 
