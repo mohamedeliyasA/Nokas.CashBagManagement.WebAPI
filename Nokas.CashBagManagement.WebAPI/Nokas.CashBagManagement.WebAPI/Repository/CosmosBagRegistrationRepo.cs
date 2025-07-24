@@ -3,6 +3,7 @@ using AutoMapper;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Nokas.CashBagManagement.WebAPI.Helpers;
 using Nokas.CashBagManagement.WebAPI.Models;
 
 namespace Nokas.CashBagManagement.WebAPI.Repository
@@ -71,6 +72,12 @@ namespace Nokas.CashBagManagement.WebAPI.Repository
             }
             catch (CosmosException ex)
             {
+                if (ex.Message.Contains("Unique index constraint violation"))
+                {
+                    _logger.LogError(ex, "Bag number already exist : {BagNumber}", bagRegistrationRequest.BagRegistration?.BagNumber);
+                    throw new DuplicateBagNumberException(bagRegistrationRequest.BagRegistration?.BagNumber ?? "Unknown");
+                }
+
                 _logger.LogError(ex, "Failed to create bag registration for BagNumber: {BagNumber}", bagRegistrationRequest.BagRegistration?.BagNumber);
                 throw;
             }

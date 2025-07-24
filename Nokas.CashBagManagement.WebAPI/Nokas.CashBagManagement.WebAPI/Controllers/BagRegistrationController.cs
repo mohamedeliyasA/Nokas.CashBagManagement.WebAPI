@@ -46,17 +46,12 @@ namespace Nokas.CashBagManagement.WebAPI.Controllers
         private string GetCorrelationId() =>
             HttpContext?.Items["CorrelationId"]?.ToString() ?? "N/A";
 
-        /// <summary>
-        /// Retrieves a bag registration by its bag number.
-        /// </summary>
-        /// <param name="bagNumber">The bag number to retrieve.</param>
-        /// <returns>A summary of the bag registration.</returns>
         [HttpGet("{bagNumber}", Name = "GetBagRegistration")]
         [ProducesResponseType(typeof(BagRegSummaryResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<BagRegSummaryResponse>> GetBagRegistrationByNumber(string bagNumber)
+        public async Task<ActionResult<BagRegistrationRequestForCreation>> GetBagRegistrationByNumber(string bagNumber)
         {
             var requestCorrelationId = GetCorrelationId();
             var clientId = ClaimsHelper.GetClientId(User);
@@ -70,32 +65,25 @@ namespace Nokas.CashBagManagement.WebAPI.Controllers
             var bagRegistration = await _bagRegistrationRepo.GetBagByNumberForClientAsync(bagNumber, clientId);
             if (bagRegistration == null)
             {
-                return NotFound($"No bag found with the BagNumber: {bagNumber} for this client with Id: {clientId}.");
+                return NotFound(BagRegSummaryResponse.CreateNotFoundSummary(bagNumber, clientId, requestCorrelationId));
             }
 
             bagRegistration.OperationHistory.Add(new OperationHistoryEntry
             {
                 Action = "Read",
                 Timestamp = DateTime.UtcNow,
-                CorrelationId = bagRegistration.CorrelationId,
+                BagLifeCycleId = bagRegistration.CorrelationId,
                 RequestCorrelationId = requestCorrelationId,
                 PerformedBy = clientId
             });
 
             await _bagRegistrationRepo.UpdateBagRegistration(bagRegistration);
 
-            var bagSummary = _mapper.Map<BagRegSummaryResponse>(bagRegistration);
-            bagSummary.Description = "Bag Retrieved Successfully";
-            bagSummary.RequestCorrelationId = requestCorrelationId;
+            var bagRegRes = _mapper.Map<BagRegistrationRequestForCreation>(bagRegistration);
 
-            return Ok(bagSummary);
+            return Ok(bagRegRes);
         }
 
-        /// <summary>
-        /// Creates a new bag registration.
-        /// </summary>
-        /// <param name="bagRequest">The bag registration request payload.</param>
-        /// <returns>Summary of the created bag registration.</returns>
         [HttpPost("register")]
         [ProducesResponseType(typeof(BagRegSummaryResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -103,6 +91,7 @@ namespace Nokas.CashBagManagement.WebAPI.Controllers
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<BagRegSummaryResponse>> CreateBagRegistration(BagRegistrationRequestForCreation bagRequest)
         {
+            var BagLifecycleId = Guid.NewGuid().ToString();
             var requestCorrelationId = GetCorrelationId();
             var clientId = ClaimsHelper.GetClientId(User);
 
@@ -119,36 +108,40 @@ namespace Nokas.CashBagManagement.WebAPI.Controllers
 
             var newBagRegistrationRequest = _mapper.Map<BagRegistrationRequest>(bagRequest);
             newBagRegistrationRequest.ClientId = clientId;
+            newBagRegistrationRequest.BagLifecycleId = BagLifecycleId;
             newBagRegistrationRequest.CorrelationId = requestCorrelationId;
 
             newBagRegistrationRequest.OperationHistory.Add(new OperationHistoryEntry
             {
                 Action = "Create",
                 Timestamp = DateTime.UtcNow,
-                CorrelationId = newBagRegistrationRequest.CorrelationId,
+                BagLifeCycleId = newBagRegistrationRequest.BagLifecycleId,
                 RequestCorrelationId = requestCorrelationId,
                 PerformedBy = clientId
             });
 
             await _bagRegistrationRepo.CreateBagRegistration(newBagRegistrationRequest);
 
-            var bagSummary = _mapper.Map<BagRegSummaryResponse>(newBagRegistrationRequest);
-            bagSummary.Description = "Bag Created Successfully";
-            bagSummary.RequestCorrelationId = requestCorrelationId;
+            var bagSummary = new BagRegSummaryResponse
+            {
+                CustomerNumber = newBagRegistrationRequest.BagRegistration.CustomerNumber,
+                CustomerName = newBagRegistrationRequest.BagRegistration.CustomerName,
+                ActionFlag = newBagRegistrationRequest.BagRegistration.ActionFlag,
+                BagNumber = newBagRegistrationRequest.BagRegistration.BagNumber,
+                RegistrationStatus = newBagRegistrationRequest.RegistrationStatus,
+                Description = "Bag Created Successfully",
+                BagLifecycleId = newBagRegistrationRequest.BagLifecycleId,
+                RequestCorrelationId = requestCorrelationId
+            };
 
-            _logger.LogInformation("CorrelationId: {CorrelationId} - Bag registration created successfully.", requestCorrelationId);
+            _logger.LogInformation("BagLifecycleId: {BagLifecycleId} , CorrelationId: {CorrelationId} - Bag registration created successfully.", BagLifecycleId, requestCorrelationId);
 
             return Ok(bagSummary);
         }
 
-        /// <summary>
-        /// Updates an existing bag registration by its number.
-        /// </summary>
-        /// <param name="bagNumber">The bag number to update.</param>
-        /// <param name="updatedPayload">The updated registration payload.</param>
-        /// <returns>Summary of the updated bag registration.</returns>
         [HttpPut("{bagNumber}")]
         [ProducesResponseType(typeof(BagRegSummaryResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<BagRegSummaryResponse>> UpdateBagRegistration(string bagNumber, [FromBody] BagRegistrationRequestForCreation updatedPayload)
@@ -156,21 +149,34 @@ namespace Nokas.CashBagManagement.WebAPI.Controllers
             var requestCorrelationId = GetCorrelationId();
             var clientId = ClaimsHelper.GetClientId(User);
 
+            if (updatedPayload?.BagRegistration == null)
+            {
+                _logger.LogWarning("CorrelationId: {CorrelationId} - Update request payload is missing or invalid.", requestCorrelationId);
+                return BadRequest("The request body is missing or malformed.");
+            }
+
+            if (!string.Equals(bagNumber, updatedPayload.BagRegistration.BagNumber, StringComparison.OrdinalIgnoreCase))
+            {
+                _logger.LogWarning("CorrelationId: {CorrelationId} - Mismatch between BagNumber in URL ({UrlBag}) and payload ({PayloadBag}).",
+                    requestCorrelationId, bagNumber, updatedPayload.BagRegistration.BagNumber);
+                return BadRequest("BagNumber in the URL and in the payload do not match.");
+            }
+
             var existing = await _bagRegistrationRepo.GetBagByNumberForClientAsync(bagNumber, clientId);
             if (existing == null)
             {
-                _logger.LogWarning("CorrelationId: {RequestCorrelationId} - Bag {BagNumber} not found for update.", requestCorrelationId, bagNumber);
-                return NotFound("Bag not found.");
+                _logger.LogWarning("CorrelationId: {CorrelationId} - Bag {BagNumber} not found for update.", requestCorrelationId, bagNumber);
+                return NotFound(BagRegSummaryResponse.CreateNotFoundSummary(bagNumber, clientId, requestCorrelationId));
+
             }
 
             await _serviceBusSender.SendMessageAsync(JsonSerializer.Serialize(updatedPayload), "BagRegistration");
-
             var rawPayload = await Request.ReadRawBodyAsStringAsync();
             await _blobArchiveService.ArchivePayloadAsync($"bag_{DateTime.UtcNow:yyyyMMddHHmmss}", rawPayload);
 
             var updatedBag = _mapper.Map<Models.BagRegistration>(updatedPayload.BagRegistration);
             existing.BagRegistration = updatedBag;
-            existing.CacheDbRegistrationId = updatedPayload.CacheDbRegistrationId;
+            existing.DownstreamSystemId = existing.DownstreamSystemId;
             existing.RegistrationType = updatedPayload.RegistrationType;
             existing.CustomerCountry = updatedPayload.CustomerCountry;
             existing.RegistrationStatus = "Updated";
@@ -179,7 +185,7 @@ namespace Nokas.CashBagManagement.WebAPI.Controllers
             {
                 Action = "Update",
                 Timestamp = DateTime.UtcNow,
-                CorrelationId = existing.CorrelationId,
+                BagLifeCycleId = existing.CorrelationId,
                 PerformedBy = clientId
             });
 
@@ -191,11 +197,6 @@ namespace Nokas.CashBagManagement.WebAPI.Controllers
             return Ok(response);
         }
 
-        /// <summary>
-        /// Deletes a bag registration by its bag number.
-        /// </summary>
-        /// <param name="bagNumber">The bag number to delete.</param>
-        /// <returns>Summary of the deleted bag registration.</returns>
         [HttpDelete("{bagNumber}")]
         [ProducesResponseType(typeof(BagRegSummaryResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -215,7 +216,7 @@ namespace Nokas.CashBagManagement.WebAPI.Controllers
             {
                 Action = "Delete",
                 Timestamp = DateTime.UtcNow,
-                CorrelationId = existing.CorrelationId,
+                BagLifeCycleId = existing.CorrelationId,
                 RequestCorrelationId = requestCorrelationId,
                 PerformedBy = clientId
             });
@@ -225,7 +226,7 @@ namespace Nokas.CashBagManagement.WebAPI.Controllers
             var response = _mapper.Map<BagRegSummaryResponse>(existing);
             response.Description = "Bag deleted successfully.";
             response.RequestCorrelationId = requestCorrelationId;
-            response.CorrelationId = existing.CorrelationId;
+            response.BagLifecycleId = existing.BagLifecycleId;
             return Ok(response);
         }
     }

@@ -1,93 +1,57 @@
 {
     "bagRegistration": {
-        "actionFlag": "New",
         "customerNumber": "123451",
         "customerName": "ABC Corp",
-        "bankInfo": {
-            "actingBranchName": "Oslo Branch",
-            "actingBranchId": "AB001",
-            "mainBankName": "MainBank",
-            "mainBankId": "MB001"
-        },
-        "customerAddress": "123 Main St, Oslo",
-        "registeredName": "ABC Corp",
-        "bagNumber": "BAG12310",
-        "turnoverDate": "2025-06-13T00:00:00+02:00",
-        "referenceStatement": "Ref123",
-        "exchangeRates": [
-            {
-                "foreignCurrencyCode": "USD",
-                "foreignCurrencyAmt": "100",
-                "exchangeRateValue": "10",
-                "amountInLocalCurrency": "1000"
-            }
-        ],
+        "customerCountry": "Norway",
+        "registrationType": "NOK",
+        "serviceNowOrderNumber": "SN123456",
+        "downstreamOrderNumber": "AX789456",
+        "messageId": "MSG001",
+        "senderSystem": "SN-CMS-NO",
+        "senderCorrId": "CORR123456",
+        "bagNumber": "394857349857",
+        "actionFlag": "new",
         "registrationDate": "2025-06-14T00:00:00+02:00",
+        "referenceStatement": "Ref123",
+        "turnOverDate": "2025-06-13T00:00:00+02:00",
         "registeredBy": "user123",
-        "registeredCoins": "100.00",
-        "registeredCash": "200.00",
-        "registeredChecks": "50.00",
-        "registeredForeignCurrency": "30.00",
-        "countedAmount": "380.00",
-        "countedDate": "2025-06-14T00:00:00+02:00",
-        "totalAmount": "380.00",
-        "locationId": "LOC123",
-        "location": "Main Office",
-        "shopNumber": "SHOP123",
         "easySafeAccount": "EASY123",
-        "registrationApproval": "Approved",
-        "isBankAccount": "Yes",
-        "notes": {
+        "registeredCash": "200.00",
+        "registeredCoins": "100.00",
+        "registeredChecks": "50.00",
+        "totalOrderAmountLC": "350.00",
+        "totalOrderAmountFC": "60.00",
+        "bagItemsLC": {
             "seddel1000": "2",
-            "seddel500": "5",
+            "seddel500": "10",
             "seddel200": "10",
             "seddel100": "20",
             "seddel50": "40"
         },
-        "registrationStatus": "Processed",
-        "contracts": {
-            "isPDADeclared": "Y",
-            "deviationType": "None",
-            "declarationType": "Full",
-            "containsValuta": "true",
-            "controlledAmount": "1000"
-        },
-        "pickedUpDate": "2025-06-15T00:00:00+02:00",
-        "nightSafeId": "NS001",
-        "registrationSubType": "Manual",
-        "foreignCurrencies": [
+        "bagItemsFC": [
             {
-                "currencyISOCode": "EUR",
-                "buyNotes": "50",
-                "notesAmountNok": "500",
-                "notesAmountCurrency": "50",
-                "buyCheques": "5",
-                "chequesAmountNOK": "100",
-                "chequesAmountCurrency": "10",
-                "currencyAmount": "60",
-                "regDate": "2025-06-14T00:00:00+02:00",
                 "itemId": "ITEM001",
-                "exchangeRate": "10"
-            }
-        ],
-        "customerCountry": "Norway",
-        "confirmFlag": "Y",
-        "registeredUserId": "user123",
-        "confirmDateTime": "2025-06-14T18:06:29+02:00",
-        "dropNSName": "NightSafe01",
-        "dropNSDateTime": "2025-06-14T18:06:29+02:00",
-        "vouchers": [
+                "itemCurrencyCode": "EUR",
+                "quantity": "60",
+                "baseCurrencyCode": "NOK",
+                "itemCurrencyAmountFC": "60",
+                "itemCurrencyAmountLC": "600",
+                "exchangeRate": "10",
+                "itemUnitPrice": "10"
+            },
             {
-                "voucherNumber": "VCH001",
-                "voucherAmount": "100",
-                "bankBranchNumber": "001",
-                "bankBranchName": "Main Branch"
+                "itemId": "ITEM002",
+                "itemCurrencyCode": "USD",
+                "quantity": "100",
+                "baseCurrencyCode": "NOK",
+                "itemCurrencyAmountFC": "100",
+                "itemCurrencyAmountLC": "1000",
+                "exchangeRate": "10",
+                "itemUnitPrice": "10"
             }
         ]
     },
     "cacheDbRegistrationId": "REG001",
-    "registrationType": "Standard",
-    "customerCountry": "Norway",
-    "status": "In-Progress",
-    "clientId": "1a732120-1149-4d97-98b5-d454d144b383"
+    "registrationType": "NOK",
+    "customerCountry": "Norway"
 }

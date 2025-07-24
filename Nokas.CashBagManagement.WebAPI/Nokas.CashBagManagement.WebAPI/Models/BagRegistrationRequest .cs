@@ -13,8 +13,8 @@ namespace Nokas.CashBagManagement.WebAPI.Models
         [XmlElement("BagRegistration")]
         public BagRegistration BagRegistration { get; set; }
 
-        [XmlElement("CacheDbRegistrationId")]
-        public string CacheDbRegistrationId { get; set; }
+        [XmlElement("DownstreamSystemId")]
+        public string DownstreamSystemId { get; set; }
 
         [XmlElement("RegistrationType")]
         public string RegistrationType { get; set; }
@@ -31,6 +31,7 @@ namespace Nokas.CashBagManagement.WebAPI.Models
         [JsonProperty("clientId")]
         public string ClientId { get; set; }
 
+        public string BagLifecycleId { get; set; }
         public string CorrelationId { get; set; }
 
         public List<OperationHistoryEntry> OperationHistory { get; set; } = new();

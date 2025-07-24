@@ -1,8 +1,7 @@
 ﻿using System.Net;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using System.Xml.Serialization;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Azure.Cosmos;
 using Nokas.CashBagManagement.WebAPI.Helpers;
 
 namespace Nokas.CashBagManagement.WebAPI.Middleware
@@ -43,76 +42,41 @@ namespace Nokas.CashBagManagement.WebAPI.Middleware
                 var isDev = _env.IsDevelopment();
                 int statusCode;
                 string title;
+                string? field = null;
+                string? code = null;
 
                 if (ex is DuplicateBagNumberException duplicateEx)
                 {
                     statusCode = (int)HttpStatusCode.Conflict;
                     title = duplicateEx.Message;
-
+                    field = "BagNumber";
+                    code = "ERR_DUPLICATE_BAG";
                     _logger.LogWarning("CorrelationId: {CorrelationId} - Duplicate bag number error: {Message}", correlationId, title);
                 }
-                else if (ex is DbUpdateException dbEx)
+                else if (ex is CosmosException cosmosEx)
                 {
-                    statusCode = (int)HttpStatusCode.BadRequest;
-                    var raw = dbEx.GetBaseException()?.Message ?? dbEx.Message;
-                    string field = null;
+                    var raw = cosmosEx.Message;
+                    statusCode = (int)cosmosEx.StatusCode;
 
-                    if (raw.Contains("String or binary data would be truncated"))
+                    if (raw.Contains("Unique index constraint violation"))
                     {
-                        var match = Regex.Match(raw, @"column '(?<column>[^']+)'");
-                        if (match.Success)
-                            field = match.Groups["column"].Value?.Split('_').LastOrDefault();
-
-                        title = field != null
-                            ? $"The field '{field}' exceeds the allowed length."
-                            : "One of the values is too long for the database field.";
-                    }
-                    else if (raw.Contains("FOREIGN KEY constraint"))
-                    {
-                        var match = Regex.Match(raw, @"FOREIGN KEY constraint ""(?<constraint>[^""]+)""");
-                        var constraint = match.Success ? match.Groups["constraint"].Value : null;
-                        title = constraint != null
-                            ? $"Invalid reference related to constraint '{constraint}'."
-                            : "Invalid reference. A related record does not exist.";
-                    }
-                    else if (raw.Contains("Cannot insert the value NULL into column"))
-                    {
-                        var match = Regex.Match(raw, @"column '(?<column>[^']+)'");
-                        field = match.Success ? match.Groups["column"].Value?.Split('_').LastOrDefault() : null;
-
-                        title = field != null
-                            ? $"Missing required value for '{field}'."
-                            : "Missing required field.";
-                    }
-                    else if (raw.Contains("UNIQUE KEY constraint"))
-                    {
-                        var match = Regex.Match(raw, @"UNIQUE KEY constraint '(?<constraint>[^']+)'");
-                        var constraint = match.Success ? match.Groups["constraint"].Value : null;
-
-                        title = constraint != null
-                            ? $"Duplicate entry detected. Violates uniqueness constraint '{constraint}'."
-                            : "This value must be unique. A record with the same value already exists.";
-                    }
-                    else if (raw.Contains("CHECK constraint"))
-                    {
-                        var match = Regex.Match(raw, @"CHECK constraint '(?<constraint>[^']+)'");
-                        var constraint = match.Success ? match.Groups["constraint"].Value : null;
-
-                        title = constraint != null
-                            ? $"Invalid value. Violates rule '{constraint}'."
-                            : "The value provided violates a business rule.";
+                        title = "Bag number already exists. Please use a unique BagNumber.";
+                        field = "BagNumber";
+                        code = "ERR_DUPLICATE_BAG";
                     }
                     else
                     {
-                        title = "Invalid data submitted. Please check your input.";
+                        title = "A database error occurred while processing your request.";
+                        code = "ERR_COSMOS_GENERIC";
                     }
 
-                    _logger.LogWarning(dbEx, "Validation error: {Message}", raw);
+                    _logger.LogWarning(cosmosEx, "Cosmos DB error occurred. CorrelationId: {CorrelationId}", correlationId);
                 }
                 else
                 {
                     title = isDev ? "Unhandled exception occurred." : "An unexpected error occurred.";
                     statusCode = (int)HttpStatusCode.InternalServerError;
+                    code = "ERR_INTERNAL";
                     _logger.LogError(ex,
                         "Unhandled exception in Controller: {Controller}, Action: {Action}, URI: {Uri}, CorrelationId: {CorrelationId}",
                         controller, action, fullUrl, correlationId);
@@ -127,7 +91,9 @@ namespace Nokas.CashBagManagement.WebAPI.Middleware
                     Action = isDev ? action : null,
                     Path = isDev ? fullUrl : null,
                     Exception = isDev ? ex.Message : null,
-                    StackTrace = isDev ? ex.StackTrace : null
+                    StackTrace = isDev ? ex.StackTrace : null,
+                    Field = field,
+                    Code = code
                 };
 
                 context.Response.StatusCode = statusCode;
@@ -158,11 +124,14 @@ namespace Nokas.CashBagManagement.WebAPI.Middleware
         public string Title { get; set; }
         public int Status { get; set; }
         public string CorrelationId { get; set; }
-
         public string? Controller { get; set; }
         public string? Action { get; set; }
         public string? Path { get; set; }
         public string? Exception { get; set; }
         public string? StackTrace { get; set; }
+
+        // Optional machine-readable fields
+        public string? Field { get; set; }   // e.g., BagNumber
+        public string? Code { get; set; }    // e.g., ERR_DUPLICATE_BAG
     }
 }

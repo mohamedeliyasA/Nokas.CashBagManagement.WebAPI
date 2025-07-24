@@ -12,9 +12,6 @@ namespace Nokas.CashBagManagement.WebAPI.Models
         [XmlElement("BagRegistration")]
         public BagRegistration BagRegistration { get; set; }
 
-        [XmlElement("CacheDbRegistrationId")]
-        public string CacheDbRegistrationId { get; set; }
-
         [Required]
         [XmlElement("RegistrationType")]
         public string RegistrationType { get; set; }

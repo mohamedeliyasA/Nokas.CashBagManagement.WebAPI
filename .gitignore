@@ -39,6 +39,8 @@ Thumbs.db
 # Azure settings
 **/appsettings.*.json
 appsettings.Development.json
+appsettings.Production.json
+appsettings.Test.json
 appsettings.Local.json
 appsettings.*.Secrets.json
 
