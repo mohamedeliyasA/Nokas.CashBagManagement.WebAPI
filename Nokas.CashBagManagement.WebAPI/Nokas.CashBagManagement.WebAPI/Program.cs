@@ -33,7 +33,11 @@ builder.Services.AddControllers(options =>
 .AddXmlSerializerFormatters();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+builder.Services.AddAutoMapper(config =>
+{
+    config.AddMaps(AppDomain.CurrentDomain.GetAssemblies());
+});
 
 #endregion
 
